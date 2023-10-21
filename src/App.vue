@@ -1,11 +1,11 @@
 <script setup>
-import { RouterView } from 'vue-router'
-import { NButton } from 'naive-ui'
+let a = ref(1)
 </script>
 
 <template>
   <RouterView />
-  <NButton>555555</NButton>
+
+  <NButton @click="a++"> {{ a }}</NButton>
 </template>
 
 <style scoped></style>
