@@ -1,7 +1,6 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import { NButton } from 'naive-ui'
-
 </script>
 
 <template>
