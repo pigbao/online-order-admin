@@ -1,8 +1,9 @@
 <script setup>
+import request from '@/utils/request'
 let a = ref(1)
-axios.post('/user', {
+request.post('/user', {
   firstName: 'Fred',
-  lastName: 'Flintstone'
+
 })
   .then(function(response) {
     console.log(response);
