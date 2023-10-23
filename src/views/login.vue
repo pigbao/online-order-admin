@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>
-    <h1>404</h1>
+  <div text-3xl text-green-400>
+    登录
   </div>
 </template>
