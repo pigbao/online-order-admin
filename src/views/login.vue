@@ -1,4 +1,5 @@
 <script setup>
+import { apiLogin } from '@/api/login'
 const formValue = ref({
   user: "",
   password: "",
@@ -15,15 +16,14 @@ const rules = ref({
     required: true,
     message: "请输入密码",
     trigger: "blur",
-    min: 4,
-    max: 10
+
   },
 })
 const formRef = ref()
 function login() {
   formRef.value?.validate((errors) => {
     if (!errors) {
-      window.$message.success("成功");
+      apiLogin(formValue.value)
     } else {
       console.log(errors);
       window.$message.error("失败");
