@@ -33,17 +33,29 @@ function login() {
 </script>
 
 <template>
-  <div flex w-full h-full justify-center items-center>
-    <div w-72>
-      <n-form ref="formRef" :model="formValue" :rules="rules" size="large">
-        <n-form-item label="用户名" path="user">
-          <n-input v-model:value="formValue.user" placeholder="输入用户名" />
-        </n-form-item>
-        <n-form-item label="密码" path="password">
-          <n-input type="password" v-model:value="formValue.password" placeholder="输入密码" />
-        </n-form-item>
-      </n-form>
-      <n-button type="primary" block @click="login">登录</n-button>
+  <div flex w-full h-full>
+    <!--左边颜色块-->
+    <div class="w-1/2" h-full bg-primary></div>
+
+    <!--右边表单块-->
+    <div class="w-1/2" flex h-full justify-center items-center>
+      <!--控制表单大小-->
+
+      <div w-83>
+        <!--登录标题-->
+        <div text-3xl mb-8>登录</div>
+        <!--标签置左属性 label-placement="left"-->
+        <n-form ref="formRef" :model="formValue" :rules="rules" size="large" label-placement="left">
+          <n-form-item path="user">
+            <n-input v-model:value="formValue.user" placeholder="输入用户名" />
+          </n-form-item>
+          <n-form-item path="password">
+            <n-input type="password" v-model:value="formValue.password" placeholder="输入密码" />
+          </n-form-item>
+        </n-form>
+        <n-button type="primary" block @click="login">登录</n-button>
+      </div>
     </div>
+
   </div>
 </template>
