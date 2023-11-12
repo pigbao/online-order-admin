@@ -32,4 +32,5 @@ pnpm build
 - [x] 写一个登录页
 - [x] 修改主题配色
 - [ ] 完善登录页样式
+- [x] 全局图标[icons](https://icones.js.org/)
 - [ ] 搭建后端框架
