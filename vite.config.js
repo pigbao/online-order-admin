@@ -52,4 +52,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:7001', //目标url
+        changeOrigin: true, //支持跨域
+        rewrite: path => path.replace(/^\/api/, ''),
+        //重写路径,替换/api
+      },
+    },
+  },
 });

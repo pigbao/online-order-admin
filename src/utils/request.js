@@ -1,5 +1,5 @@
 const instance = axios.create({
-  baseURL: 'https://localhost:1105/',
+  baseURL: '/api',
   timeout: 5000,
 });
 // 添加请求拦截器
