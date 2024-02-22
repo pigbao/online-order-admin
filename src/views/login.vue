@@ -1,12 +1,12 @@
 <script setup>
 import { apiLogin } from '@/api/login'
 const formValue = ref({
-  user: "",
+  username: "",
   password: "",
 
 })
 const rules = ref({
-  user: {
+  username: {
     required: true,
     message: "请输入用户名",
     trigger: "blur",
@@ -21,9 +21,10 @@ const rules = ref({
 })
 const formRef = ref()
 function login() {
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      apiLogin(formValue.value)
+      const res = await apiLogin(formValue.value)
+      console.log('res :>> ', res);
     } else {
       console.log(errors);
       window.$message.error("失败");
@@ -49,7 +50,7 @@ function login() {
           <!--标签置左属性 label-placement="left"-->
           <n-form ref="formRef" :model="formValue" :rules="rules" size="large" label-placement="left">
             <n-form-item path="user">
-              <n-input round v-model:value="formValue.user" placeholder="请输入用户名">
+              <n-input round v-model:value="formValue.username" placeholder="请输入用户名">
                 <template #prefix>
                   <div i-carbon-user text-xl></div>
                 </template>
