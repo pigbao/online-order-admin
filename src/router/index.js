@@ -1,11 +1,33 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { createGuard } from './guard';
+import Layout from '@/layout/index.vue';
 // 默认挂载路由
 export const constantRoutes = [
   {
     path: '/',
-    name: 'home',
-    component: () => import('@/views/HomeView.vue'),
+    name: '',
+    meta: {
+      title: 'Root',
+      hide: true,
+    },
+    redirect: '/home/index',
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: Layout,
+    meta: {
+      title: '首页',
+      icon: 'i-carbon-home',
+    },
+    redirect: '/home/index',
+    children: [
+      {
+        path: '/home/index',
+        name: 'Home',
+        component: () => import('@/views/index.vue'),
+      },
+    ],
   },
   {
     path: '/about',
