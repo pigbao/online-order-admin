@@ -29,8 +29,9 @@ export default defineConfig({
         'vue',
         'vue-router',
         // custom
+        '@vueuse/core',
         {
-          //   '@vueuse/core': [
+          //   : [
           //     // named imports
           //     'useMouse', // import { useMouse } from '@vueuse/core',
           //     // alias
@@ -55,7 +56,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:7001', //目标url
+        target: 'http://192.168.0.104:7001', //目标url
         changeOrigin: true, //支持跨域
         rewrite: path => path.replace(/^\/api/, ''),
         //重写路径,替换/api

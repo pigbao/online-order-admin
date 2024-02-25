@@ -1,5 +1,6 @@
 <script setup>
 import { apiLogin } from '@/api/login'
+import { useUserStore } from '@/stores/user'
 const formValue = ref({
   username: "",
   password: "",
@@ -19,12 +20,18 @@ const rules = ref({
 
   },
 })
+const router = useRouter()
 const formRef = ref()
 function login() {
   formRef.value?.validate(async (errors) => {
     if (!errors) {
       const res = await apiLogin(formValue.value)
       console.log('res :>> ', res);
+      const userStore = useUserStore()
+      userStore.setToken(res)
+      router.push({
+        path: '/'
+      })
     } else {
       console.log(errors);
       window.$message.error("失败");

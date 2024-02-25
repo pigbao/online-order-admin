@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@unocss/reset": "^0.57.0",
+    "@vueuse/core": "^10.8.0",
     "axios": "^1.5.1",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",
