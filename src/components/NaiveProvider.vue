@@ -1,12 +1,16 @@
 <script setup>
-import { useMessage } from 'naive-ui'
+import { useMessage, useLoadingBar, useDialog, useNotification } from 'naive-ui'
 import { defineComponent } from 'vue'
-
+function registerNaiveTools() {
+  window.$loadingBar = useLoadingBar();
+  window.$dialog = useDialog();
+  window.$message = useMessage();
+  window.$notification = useNotification();
+}
 // content
 const NaiveProviderContent = defineComponent({
   setup() {
-    window.$message = useMessage()
-    console.log('window.$message :>> ', window.$message);
+    registerNaiveTools();
   },
   render() {
     return h('div');
@@ -15,8 +19,14 @@ const NaiveProviderContent = defineComponent({
 </script>
 
 <template>
-  <n-message-provider>
-    <slot></slot>
-    <NaiveProviderContent></NaiveProviderContent>
-  </n-message-provider>
+  <n-loading-bar-provider>
+    <n-dialog-provider>
+      <n-notification-provider>
+        <n-message-provider>
+          <slot></slot>
+          <NaiveProviderContent></NaiveProviderContent>
+        </n-message-provider>
+      </n-notification-provider>
+    </n-dialog-provider>
+  </n-loading-bar-provider>
 </template>

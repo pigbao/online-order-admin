@@ -43,7 +43,7 @@ export default defineConfig({
           ],
         },
       ],
-      dirs: ['./composables/**'],
+      dirs: ['./composables/**', 'src/stores'],
       dts: './src/auto-imports.d.ts',
     }),
     UnoCSS(),
