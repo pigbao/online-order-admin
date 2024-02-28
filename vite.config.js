@@ -45,7 +45,7 @@ export default defineConfig(configEnv => {
             ],
           },
         ],
-        dirs: ['./composables/**', 'src/stores'],
+        dirs: ['src/composables/**', 'src/stores'],
         dts: './src/auto-imports.d.ts',
       }),
       UnoCSS(),
