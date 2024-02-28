@@ -18,7 +18,6 @@ export const constantRoutes = [
     component: Layout,
     meta: {
       title: '首页',
-      icon: 'i-carbon-home',
     },
     redirect: '/home/index',
     children: [
@@ -30,19 +29,22 @@ export const constantRoutes = [
     ],
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import('@/views/AboutView.vue'),
-  },
-  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login.vue'),
+    meta: {
+      title: '登录',
+      hide: true
+    },
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/404.vue'),
+    meta: {
+      title: '404',
+      hide: true
+    },
   },
 ];
 

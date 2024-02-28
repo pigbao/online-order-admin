@@ -8,5 +8,10 @@ export const useUserStore = defineStore('user', () => {
     token.value = tokenStr;
   }
 
-  return { token, setToken };
+  function logout() {
+    token.value = null
+    router.push('/login')
+  }
+
+  return { token, setToken, logout };
 });
