@@ -23,8 +23,29 @@ export const constantRoutes = [
     children: [
       {
         path: '/home/index',
-        name: 'Home',
+        name: 'HomeIndex',
         component: () => import('@/views/index.vue'),
+      },
+    ],
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: Layout,
+    meta: {
+      title: '用户中心',
+      hide: true
+    },
+    redirect: '/user/index',
+    children: [
+      {
+        path: '/user/index',
+        name: 'UserIndex',
+        component: () => import('@/views/user/index.vue'),
+        meta: {
+          hide: true,
+          title: '用户中心'
+        }
       },
     ],
   },

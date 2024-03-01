@@ -1,3 +1,5 @@
+import { useUserStore } from '../stores/user';
+
 const instance = axios.create({
   baseURL: '/api',
   timeout: 5000,
@@ -6,6 +8,11 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
+    const {token} = useUserStore()
+    console.log('token :>> ', token);
+    if (token) {
+      config.headers.Authorization = token
+    }
     return config;
   },
   function (error) {
@@ -23,6 +30,20 @@ instance.interceptors.response.use(
       window.$message.error(res.msg); // 对响应错误做点什么
       console.log('error :>> ', res);
       return Promise.reject(res);
+    }
+
+    if (res.code === 401) {
+      // 登录状态已过期
+      window.$dialog.warning({
+        title: '提示',
+        content: res.msg,
+        positiveText: '确定',
+        onPositiveClick: () => {
+          console.log('error :>> ', res);
+          const { logout } = useUserStore();
+          logout();
+        },
+      }); // 对响应错误做点什么
     }
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么

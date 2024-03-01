@@ -1,6 +1,5 @@
-import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-
+import { apiUser } from '../api/user';
 export const useUserStore = defineStore('user', () => {
   const token = useStorage('TOKEN');
 
@@ -10,8 +9,21 @@ export const useUserStore = defineStore('user', () => {
 
   function logout() {
     token.value = null
-    router.push('/login')
+    const router = useRouter()
+    if (router) {
+      router.push('/login')
+    }
   }
 
-  return { token, setToken, logout };
+  async function getUserInfo() {
+    try {
+      const userInfo = await apiUser()
+      console.log('userInfo :>> ', userInfo);
+      return userInfo
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return { token, setToken, logout, getUserInfo };
 });

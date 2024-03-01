@@ -60,6 +60,7 @@ const actions = {
   }
 }
 
+const avatar = ref('')
 
 </script>
 

@@ -4,12 +4,13 @@ export function createGuard(router) {
   router.beforeEach(async (to, form, next) => {
     useTitle(`${import.meta.env.VITE_APP_TITLE} -----`);
     window.$loadingBar?.start();
-    const { getRoles, token } = useUserStore();
+    const { getRoles, token, getUserInfo } = useUserStore();
     const isLogin = Boolean(token);
-    // if (isLogin) {
-    //   const { roles } = await getUserInfo()
-    //   filterAsyncRoutes(roles, router)
-    // }
+    if (isLogin) {
+      console.log('token :>> ', token);
+      const { roles } = await getUserInfo()
+      // filterAsyncRoutes(roles, router)
+    }
 
     const actions = [
       {
@@ -59,8 +60,6 @@ export function createGuard(router) {
     });
 
     function actionNext() {
-      // const tabStore = useTabStore();
-      // tabStore.changeRoute(to);
       next();
     }
     // next();
