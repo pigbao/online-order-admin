@@ -1,29 +1,42 @@
 import { defineStore } from 'pinia';
 import { apiUser } from '../api/user';
+
 export const useUserStore = defineStore('user', () => {
+  const router = useRouter();
   const token = useStorage('TOKEN');
+
+  const userInfo = ref({})
 
   function setToken(tokenStr) {
     token.value = tokenStr;
   }
 
   function logout() {
-    token.value = null
-    const router = useRouter()
+    token.value = null;
+    userInfo.value = {}
+    console.log('router :>> ', router);
     if (router) {
-      router.push('/login')
+      router.push('/login');
     }
   }
 
   async function getUserInfo() {
     try {
-      const userInfo = await apiUser()
-      console.log('userInfo :>> ', userInfo);
-      return userInfo
+      if (userInfo.value) {
+        return userInfo.value
+      }
+      const res = await apiUser();
+      console.log('res :>> ', res);
+      userInfo.value = res
+      return userInfo.value;
     } catch (error) {
       console.error(error);
     }
   }
 
-  return { token, setToken, logout, getUserInfo };
+  function getRoles(){
+    return userInfo.value?.roles
+  }
+
+  return { token,getRoles, setToken, logout, getUserInfo };
 });

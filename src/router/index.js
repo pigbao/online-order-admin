@@ -33,8 +33,8 @@ export const constantRoutes = [
     name: 'User',
     component: Layout,
     meta: {
-      title: '用户中心',
-      hide: true
+      title: '用户管理',
+      hide: false
     },
     redirect: '/user/index',
     children: [
@@ -43,8 +43,17 @@ export const constantRoutes = [
         name: 'UserIndex',
         component: () => import('@/views/user/index.vue'),
         meta: {
+          hide: false,
+          title: '用户列表'
+        }
+      },
+      {
+        path: '/user/me',
+        name: 'UserMe',
+        component: () => import('@/views/user/me.vue'),
+        meta: {
           hide: true,
-          title: '用户中心'
+          title: '个人中心'
         }
       },
     ],

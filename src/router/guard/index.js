@@ -6,11 +6,6 @@ export function createGuard(router) {
     window.$loadingBar?.start();
     const { getRoles, token, getUserInfo } = useUserStore();
     const isLogin = Boolean(token);
-    if (isLogin) {
-      console.log('token :>> ', token);
-      const { roles } = await getUserInfo()
-      // filterAsyncRoutes(roles, router)
-    }
 
     const actions = [
       {
@@ -37,7 +32,7 @@ export function createGuard(router) {
       },
       {
         // 已登录状态，并且有权限 直接进入
-        flag: isLogin && Boolean(getRoles) && getRoles?.length > 0,
+        flag: isLogin && Boolean(getRoles()) && getRoles()?.length > 0,
         action() {
           actionNext();
         },
@@ -46,7 +41,8 @@ export function createGuard(router) {
         // 已登录状态，无权限信息获取用户权限信息并挂载动态路由
         flag: isLogin,
         async action() {
-          actionNext();
+          // await getUserInfo()
+          next();
         },
       },
     ];
@@ -54,7 +50,7 @@ export function createGuard(router) {
     actions.some(item => {
       const { flag, action } = item;
       if (flag) {
-        action();
+       action();
       }
       return flag;
     });
