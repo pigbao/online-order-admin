@@ -1,5 +1,6 @@
 <script setup>
 import colors from '@/theme/color.js';
+import { zhCN, dateZhCN } from 'naive-ui'
 const themeOverrides = {
   common: {
     "primaryColor": colors['color-primary-500'],
@@ -30,7 +31,7 @@ const themeOverrides = {
 </script>
 
 <template>
-  <n-config-provider h-full :theme-overrides="themeOverrides">
+  <n-config-provider h-full :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
     <NaiveProvider>
       <RouterView />
     </NaiveProvider>

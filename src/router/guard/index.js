@@ -4,12 +4,8 @@ export function createGuard(router) {
   router.beforeEach(async (to, form, next) => {
     useTitle(`${import.meta.env.VITE_APP_TITLE} -----`);
     window.$loadingBar?.start();
-    const { getRoles, token } = useUserStore();
+    const { getRoles, token, getUserInfo } = useUserStore();
     const isLogin = Boolean(token);
-    // if (isLogin) {
-    //   const { roles } = await getUserInfo()
-    //   filterAsyncRoutes(roles, router)
-    // }
 
     const actions = [
       {
@@ -36,7 +32,7 @@ export function createGuard(router) {
       },
       {
         // 已登录状态，并且有权限 直接进入
-        flag: isLogin && Boolean(getRoles) && getRoles?.length > 0,
+        flag: isLogin && Boolean(getRoles()) && getRoles()?.length > 0,
         action() {
           actionNext();
         },
@@ -45,7 +41,8 @@ export function createGuard(router) {
         // 已登录状态，无权限信息获取用户权限信息并挂载动态路由
         flag: isLogin,
         async action() {
-          actionNext();
+          // await getUserInfo()
+          next();
         },
       },
     ];
@@ -53,14 +50,12 @@ export function createGuard(router) {
     actions.some(item => {
       const { flag, action } = item;
       if (flag) {
-        action();
+       action();
       }
       return flag;
     });
 
     function actionNext() {
-      // const tabStore = useTabStore();
-      // tabStore.changeRoute(to);
       next();
     }
     // next();

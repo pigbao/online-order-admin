@@ -23,14 +23,45 @@ export const constantRoutes = [
     children: [
       {
         path: '/home/index',
-        name: 'Home',
+        name: 'HomeIndex',
         component: () => import('@/views/index.vue'),
+      },
+    ],
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: Layout,
+    meta: {
+      title: '用户管理',
+      hide: false
+    },
+    redirect: '/user/list',
+    children: [
+      {
+        path: '/user/list',
+        name: 'UserList',
+        component: () => import('@/views/user/list/index.vue'),
+        meta: {
+          hide: false,
+          title: '用户列表'
+        }
+      },
+      {
+        path: '/user/me',
+        name: 'UserMe',
+        component: () => import('@/views/user/me/index.vue'),
+        meta: {
+          hide: true,
+          title: '个人中心'
+        }
       },
     ],
   },
   {
     path: '/login',
     name: 'login',
+    component: Layout,
     component: () => import('@/views/login.vue'),
     meta: {
       title: '登录',
@@ -38,9 +69,30 @@ export const constantRoutes = [
     },
   },
   {
+    path: '/error',
+    name: 'error',
+    component: Layout,
+    meta: {
+      title: 'error',
+      hide: true
+    },
+    redirect: '/error/404',
+    children: [
+      {
+        path: '/error/404',
+        name: '404',
+        component: () => import('@/views/404.vue'),
+        meta: {
+          title: '404',
+          hide: true
+        },
+      },
+    ],
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('@/views/404.vue'),
+    redirect: '/error/404',
     meta: {
       title: '404',
       hide: true

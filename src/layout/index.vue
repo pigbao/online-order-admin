@@ -13,7 +13,7 @@ const { toggle } = useFullscreen(appMain)
       <n-layout>
         <div h-full flex flex-col>
           <PageHeader @full="toggle"></PageHeader>
-          <div w-full flex-1 p-6>
+          <div w-full flex-1 p-6 bg-gray:5>
             <router-view v-slot="{ Component, route }">
               <transition name="fade" mode="out-in" :appear="true">
                 <component :is="Component" :key="route.fullPath" />
