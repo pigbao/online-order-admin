@@ -48,6 +48,15 @@ export const constantRoutes = [
         }
       },
       {
+        path: '/user/roles',
+        name: 'UserRoles',
+        component: () => import('@/views/user/roles/index.vue'),
+        meta: {
+          hide: false,
+          title: '角色管理'
+        }
+      },
+      {
         path: '/user/me',
         name: 'UserMe',
         component: () => import('@/views/user/me/index.vue'),
@@ -99,6 +108,48 @@ export const constantRoutes = [
     },
   },
 ];
+
+export const asyncRoutes = [
+  {
+    path: '/user',
+    name: 'User',
+    component: Layout,
+    meta: {
+      title: '用户管理',
+      hide: false
+    },
+    redirect: '/user/list',
+    children: [
+      {
+        path: '/user/list',
+        name: 'UserList',
+        component: () => import('@/views/user/list/index.vue'),
+        meta: {
+          hide: false,
+          title: '用户列表'
+        }
+      },
+      {
+        path: '/user/roles',
+        name: 'UserRoles',
+        component: () => import('@/views/user/roles/index.vue'),
+        meta: {
+          hide: false,
+          title: '角色管理'
+        }
+      },
+      {
+        path: '/user/me',
+        name: 'UserMe',
+        component: () => import('@/views/user/me/index.vue'),
+        meta: {
+          hide: true,
+          title: '个人中心'
+        }
+      },
+    ],
+  },
+]
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

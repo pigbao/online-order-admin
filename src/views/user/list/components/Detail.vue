@@ -1,5 +1,5 @@
 <script setup>
-import { apiAdd } from '@/api/user'
+import { apiAdd,apiDetail } from '@/api/user'
 
 defineExpose({
   open,
@@ -27,8 +27,9 @@ function close() {
 async function getDetail(id){
   try {
     const res = await apiDetail(id)
+    form.value = res
   } catch (error) {
-    
+    console.error(error);
   }
 }
 const submitLoading = ref(false)

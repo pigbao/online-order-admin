@@ -4,6 +4,8 @@ import { apiQuery } from '@/api/user'
 import Detail from './components/Detail.vue'
 
 const queryForm = ref({
+  username: undefined,
+  phone: undefined,
   pageNum: 1,
   pageSize: 10
 })
@@ -14,10 +16,9 @@ function search() {
 }
 
 function reset() {
-  queryForm.value = {
-    pageNum: 1,
-    pageSize: 10
-  }
+  queryForm.value.username = null
+  queryForm.value.phone = null
+  getList()
 }
 
 const columns = ref([
@@ -46,7 +47,7 @@ const columns = ref([
     key: 'createTime'
   },
   {
-    title: 'Action',
+    title: '操作',
     key: 'actions',
     render(row) {
       return h(
