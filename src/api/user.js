@@ -1,10 +1,9 @@
 import request from '@/utils/request';
 
-export function apiUser(data) {
+export function apiUser() {
   return request({
-    url: '/getUserInfo',
+    url: '/user/getUserInfo',
     method: 'get',
-    data: data,
   });
 }
 

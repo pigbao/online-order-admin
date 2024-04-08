@@ -11,6 +11,7 @@ const router = useRouter()
 const menuOptions = useMenus(router.options.routes)
 // router是全局路由对象
 
+
 const menuRef = ref()
 onMounted(() => {
   nextTick(() => {

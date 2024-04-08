@@ -51,3 +51,17 @@ export function apiDetail(id) {
     params: {id},
   });
 }
+
+
+/**
+ * 获取所有的角色
+ * @param {*} data 
+ * @returns 
+ */
+export function apiAllRoles() {
+  return request({
+    url: '/role/all',
+    method: 'get',
+  });
+}
+

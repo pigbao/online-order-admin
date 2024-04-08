@@ -35,10 +35,6 @@ const columns = ref([
     key: 'phone'
   },
   {
-    title: '角色',
-    key: 'roles'
-  },
-  {
     title: '创建者',
     key: 'createUserName'
   },
