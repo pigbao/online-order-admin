@@ -2,18 +2,16 @@ import { useRouter } from "vue-router";
 import { asyncRoutes,notFoundRoute } from "../index"
 
 export function asyncLoadRoutes(menus,router){
-  console.log('router :>> ', router.getRoutes());
+  // console.log('router :>> ', router.getRoutes());
 
-  if (!menus) {
-    return
-  }
+  // if (!menus) {
+  //   return
+  // }
 
-  const newRoutes = filtersRoute(asyncRoutes,menus)
-  console.log('newRoutes :>> ', newRoutes);
+  // const newRoutes = filtersRoute(asyncRoutes,menus)
   
-  newRoutes.forEach(route => router.addRoute(route));
+  // newRoutes.forEach(route => router.addRoute(route));
   // router.addRoute(notFoundRoute)
-  console.log('router :>> ', router.getRoutes());
 }
 
 function filtersRoute(routes,menus){
