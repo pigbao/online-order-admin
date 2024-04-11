@@ -105,6 +105,26 @@ export const constantRoutes = [
           title: '商品列表'
         }
       },
+      // 添加商品
+      {
+        path: '/goods/list/add',
+        name: 'GoodsListAdd',
+        component: () => import('@/views/goods/list/detail.vue'),
+        meta: {
+          hide: true,
+          title: '添加商品'
+        }
+      },
+      // 编辑商品
+      {
+        path: '/goods/list/edit/:id',
+        name: 'GoodsListEdit',
+        component: () => import('@/views/goods/list/detail.vue'),
+        meta: {
+          hide: true,
+          title: '编辑商品'
+        }
+      },
 
     ]
   },
