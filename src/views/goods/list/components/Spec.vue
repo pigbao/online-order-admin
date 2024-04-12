@@ -1,5 +1,6 @@
 <script setup>
-import { NInput } from 'naive-ui';
+import { NInputNumber } from 'naive-ui';
+import MoneyInput from '@/components/MoneyInput.vue';
 
 const model = defineModel({
   default: []
@@ -23,21 +24,26 @@ const columns = computed(() => {
       title: '原价',
       key: 'originalPrice',
       render: (row) => {
-        return h(NInput, { value: row.originalPrice, onInput: (val) => { row.originalPrice = val } })
+        return h(MoneyInput, { value: row.originalPrice, onInput: (val) => { row.originalPrice = val } })
       }
     },
     {
       title: '现价',
-      key: 'price'
+      key: 'price',
+      render: (row) => {
+        return h(MoneyInput, { value: row.originalPrice, onInput: (val) => { row.originalPrice = val } })
+      }
     },
     {
       title: '库存',
-      key: 'stock'
+      key: 'stock',
+      render: (row) => {
+        return h(NInputNumber, { value: row.originalPrice, onInput: (val) => { row.originalPrice = val } })
+      }
     }]
   const spData = model.value.map(item => {
     return JSON.parse(item.spData)
   })
-  console.log('spData :>> ', spData);
   const spColumns = spData.reduce((acc, cur) => {
     cur.forEach(item => {
       if (!acc.includes(item.title)) {
@@ -51,11 +57,10 @@ const columns = computed(() => {
       key: item
     }
   })
-  console.log('spColumns :>> ', spColumns);
   return [...spColumns, ...defaultColumns,]
 })
 
-const specs = ref([{ title: '颜色', data: ['红色', '蓝色'] }])
+const specs = ref([{ title: '默认规格', data: ['默认属性'] }])
 
 
 function handleUpdateSpecs() {
@@ -98,8 +103,11 @@ function handleUpdateSpecs() {
       spData: JSON.stringify(item)
     }
   })
-  console.log('model.value :>> ', model.value);
 }
+
+onMounted(() => {
+  handleUpdateSpecs()
+})
 </script>
 
 <template>
@@ -109,11 +117,12 @@ function handleUpdateSpecs() {
         <div flex flex-col gap-2 v-for="(item, index) in specs">
           <div flex justify-between items-end>
             <div>规格名称</div>
-            <n-button dashed type="error" size="small" @click="specs.splice(index, 1)"> 删除</n-button>
+            <n-button dashed type="error" size="small" @click="specs.splice(index, 1)" v-if="specs.length > 1">
+              删除</n-button>
           </div>
           <n-input v-model:value="item.title" placeholder="规格名称" />
           <div>规格值</div>
-          <n-dynamic-tags v-model:value="item.data" />
+          <n-dynamic-tags v-model:value="item.data" :closable="item.data.length > 1" />
         </div>
         <n-button block dashed @click="specs.push({ title: undefined, data: [] })"> 添加规格</n-button>
       </div>

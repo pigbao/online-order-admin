@@ -23,6 +23,11 @@ export const dicts = {
     { label: '堂食', value: '1' },
     { label: '外卖', value: '2' },
   ],
+  // 是否
+  is: [
+    { label: '是', value: '1' },
+    { label: '否', value: '2' },
+  ],
 }
 
 export function useDict(type) {

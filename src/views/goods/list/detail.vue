@@ -3,7 +3,8 @@ import { apiAdd, apiUpdate, apiDetail } from '@/api/goods/list'
 import { apiQuery as apiQueryCategory } from '@/api/goods/category'
 import Spec from './components/Spec.vue'
 const formRef = ref(null)
-const form = ref({})
+const form = ref({
+})
 
 const { dictArray: isTakeoutDict } = useDict('isTakeout')
 const { dictArray: isShowDict } = useDict('isShow')
@@ -12,6 +13,7 @@ const submitLoading = ref(false)
 async function submit() {
   try {
     submitLoading.value = true
+    console.log('form.value :>> ', form.value);
     await formRef.value.validate()
     if (form.value.id) {
       await apiUpdate(form.value)
@@ -66,13 +68,19 @@ const allCategory = ref([])
 async function getCategory() {
   try {
     const res = await apiQueryCategory()
-    allCategory.value = res
+    allCategory.value = res.map(item => {
+      return {
+        ...item,
+        id: `${item.id}`
+      }
+    })
   } catch (error) {
     console.error(error);
   }
 }
 
 getCategory()
+
 
 </script>
 
@@ -92,9 +100,8 @@ getCategory()
           <n-form-item path="img" label="商品图片" :rule="[{ required: true, message: '请选择商品图片', trigger: 'change' }]">
             <UploadImage v-model:value="form.img"></UploadImage>
           </n-form-item>
-          <n-form-item path="specs" label="商品规格">
+          <n-form-item path="specs" label="规格信息">
             <Spec v-model="form.specs"></Spec>
-
           </n-form-item>
 
           <n-form-item path="intro" label="商品介绍" :rule="[{ required: true, message: '请输入', trigger: 'blur' }]">
