@@ -16,6 +16,7 @@ const tableData = computed(() => {
     })
     return { ...item, ...spObj }
   })
+
 })
 
 const columns = computed(() => {
@@ -23,22 +24,31 @@ const columns = computed(() => {
     {
       title: '原价',
       key: 'originalPrice',
-      render: (row) => {
-        return h(MoneyInput, { value: row.originalPrice, onInput: (val) => { row.originalPrice = val } })
+      render: (row, index) => {
+        return h(MoneyInput, {
+          money: model.value[index].originalPrice, onUpdateMoney: (val) => {
+            console.log('val :>> ', val);
+            model.value[index].originalPrice = val
+          }
+        })
       }
     },
     {
       title: '现价',
       key: 'price',
-      render: (row) => {
-        return h(MoneyInput, { value: row.originalPrice, onInput: (val) => { row.originalPrice = val } })
+      render: (row, index) => {
+        return h(MoneyInput, { money: model.value[index].price, onUpdateMoney: (val) => { model.value[index].price = val } })
       }
     },
     {
       title: '库存',
       key: 'stock',
-      render: (row) => {
-        return h(NInputNumber, { value: row.originalPrice, onInput: (val) => { row.originalPrice = val } })
+      render: (row, index) => {
+        return h(NInputNumber, {
+          value: model.value[index].stock, onUpdateValue: (val) => {
+            model.value[index].stock = val
+          }
+        })
       }
     }]
   const spData = model.value.map(item => {
@@ -105,9 +115,33 @@ function handleUpdateSpecs() {
   })
 }
 
+function loadSpecs(initSpecs) {
+  const spData = initSpecs.map(item => {
+    return JSON.parse(item.spData)
+  })
+  let sp = spData.reduce((acc, cur) => {
+    cur.forEach(item => {
+      if (!acc.some(accItem => accItem.title === item.title)) {
+        acc.push({ title: item.title, data: [item.value] })
+      } else {
+        const index = acc.findIndex(accItem => accItem.title === item.title)
+        acc[index].data.push(item.value)
+        acc[index].data = [...new Set(acc[index].data)]
+      }
+    })
+    return acc
+  }, [])
+  specs.value = sp
+}
+
 onMounted(() => {
   handleUpdateSpecs()
 })
+
+defineExpose({
+  loadSpecs,
+})
+
 </script>
 
 <template>

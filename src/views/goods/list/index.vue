@@ -1,7 +1,8 @@
 <script setup>
-import { NButton, NSpace } from 'naive-ui'
-import { apiQuery, apiDel } from '@/api/goods/list'
+import { NButton, NSpace, NImage, NSwitch, NEllipsis } from 'naive-ui'
+import { apiQuery, apiDel, apiShelves } from '@/api/goods/list'
 import dayjs from 'dayjs'
+import { h } from 'vue';
 const queryForm = ref({
   goodsName: undefined,
 })
@@ -22,15 +23,36 @@ const columns = ref([
   },
   {
     title: '商品图片',
-    key: 'goodsImg'
+    key: 'goodsImg',
+    render(row) {
+      return h(NImage, {
+        src: row.img,
+        width: '50',
+      })
+    }
   },
   {
     title: '是否上架',
-    key: 'isTakeout'
+    key: 'isShelves',
+    render(row) {
+      return h(NSwitch, {
+        value: row.isShelves,
+        onUpdateValue: (value) => {
+          row.isShelves = value
+          changeShelves(row.id, value)
+        },
+        checkedValue: 1,
+        uncheckedValue: 2,
+      })
+    }
   },
   {
-    title: '排序',
-    key: 'sort'
+    title: '商品描述',
+    key: 'intro',
+    render(row) {
+      return h(NEllipsis, { style: "max-width: 120px" }, () => row.intro)
+    },
+
   },
   {
     title: '创建者',
@@ -80,6 +102,29 @@ const columns = ref([
     }
   }
 ])
+
+async function changeShelves(id, isShelves) {
+  const isShelvesLabel = isShelves == 2 ? '下架' : '上架'
+  window.$dialog.warning({
+    title: '提示',
+    content: `确定要${isShelvesLabel}商品吗？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      try {
+        await apiShelves(id, isShelves)
+        window.$message.success(`${isShelvesLabel}成功`)
+        getList()
+      } catch (error) {
+        console.error(error);
+        window.$message.error(`${isShelvesLabel}成功`)
+      }
+    },
+    onNegativeClick: () => {
+      getList()
+    }
+  })
+}
 
 const list = ref([])
 
@@ -132,8 +177,8 @@ const { dictVL: isShowDict } = useDict('isShow')
 <template>
   <n-card h-full>
     <n-form ref="formRef" inline label-placement="left" :model="queryForm">
-      <n-form-item label="分类名称" path="goodsName">
-        <n-input v-model:value="queryForm.goodsName" placeholder="输入分类名称" />
+      <n-form-item label="商品名称" path="goodsName">
+        <n-input v-model:value="queryForm.goodsName" placeholder="输入商品名称" />
       </n-form-item>
       <n-form-item>
         <n-space>

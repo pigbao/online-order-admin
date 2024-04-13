@@ -64,3 +64,15 @@ export function apiDel(id) {
     params: {id},
   });
 }
+/**
+ * 删除
+ * @param {*} data 
+ * @returns 
+ */
+export function apiShelves(id,isShelves) {
+  return request({
+    url: '/goods/changeShelves',
+    method: 'get',
+    params: {id,isShelves},
+  });
+}

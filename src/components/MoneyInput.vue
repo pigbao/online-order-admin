@@ -1,13 +1,23 @@
 <script setup>
 
-const model = defineModel('value')
+// const model = defineModel('value')
+const props = defineProps({
+  money: {
+    type: Number,
+    default: 0
+  }
+})
+
+const emits = defineEmits(['update:money', 'updateMoney'])
 
 const value = computed({
   get() {
-    return (model.value || 0) / 100
+    return (props.money || 0) / 100
   },
   set(val) {
-    model.value = (val || 0) * 100
+    let v = (val || 0) * 100
+    emits('update:money', v)
+    emits('updateMoney', v)
   }
 })
 
