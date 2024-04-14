@@ -159,6 +159,37 @@ export const constantRoutes = [
 
     ]
   },
+  // 订单管理
+  {
+    path: '/order',
+    name: 'Order',
+    component: Layout,
+    meta: {
+      title: '订单管理',
+      hide: false
+    },
+    redirect: '/order/list',
+    children: [
+      {
+        path: '/order/list',
+        name: 'OrderList',
+        component: () => import('@/views/order/list/index.vue'),
+        meta: {
+          hide: false,
+          title: '订单列表'
+        }
+      },
+      {
+        path: '/order/detail/:id',
+        name: 'OrderDetail',
+        component: () => import('@/views/order/list/detail.vue'),
+        meta: {
+          hide: true,
+          title: '订单详情'
+        }
+      },
+    ]
+  },
   {
     path: '/user',
     name: 'User',
@@ -249,10 +280,10 @@ export const asyncRoutes = [
   //     },
   //   ],
   // },
- 
+
 ]
 
-export const  notFoundRoute =  {
+export const notFoundRoute = {
   path: '/:pathMatch(.*)*',
   name: 'NotFound',
   redirect: '/error/404',
