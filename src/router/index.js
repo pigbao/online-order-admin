@@ -59,6 +59,37 @@ export const constantRoutes = [
       },
     ],
   },
+  // 店铺管理
+  {
+    path: '/shop',
+    name: 'Shop',
+    component: Layout,
+    meta: {
+      title: '店铺管理',
+      hide: false
+    },
+    redirect: '/shop/basic',
+    children: [
+      {
+        path: '/shop/basic',
+        name: 'ShopBasic',
+        component: () => import('@/views/shop/basic/index.vue'),
+        meta: {
+          hide: false,
+          title: '店铺信息'
+        }
+      },
+      {
+        path: '/shop/banner',
+        name: 'ShopBanner',
+        component: () => import('@/views/shop/banner/index.vue'),
+        meta: {
+          hide: false,
+          title: '轮播图'
+        }
+      },
+    ],
+  },
   {
     path: '/goods',
     name: 'Goods',
