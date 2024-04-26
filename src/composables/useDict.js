@@ -20,7 +20,7 @@ export const dicts = {
   ],
   // 外送堂食
   isTakeout: [
-    { label: '堂食', value: '1' },
+    { label: '自取', value: '1' },
     { label: '外卖', value: '2' },
   ],
   // 是否

@@ -1,66 +1,73 @@
 <script setup>
-// import { apiAdd, apiUpdate, apiDetail } from '@/api/goods/list'
-// import { apiQuery as apiQueryCategory } from '@/api/goods/category'
+import { apiUpdate, apiDetail } from '@/api/shop/basic'
+import dayjs from 'dayjs';
 // import Spec from './components/Spec.vue'
-const formRef = ref(null)
+
+
+const formRef = ref(null) // 表单实例
 const form = ref({
-})
-
-
-const submitLoading = ref(false)
+}) // 表单数据
+const submitLoading = ref(false) // 提交loading
+/**
+ * 提交表单
+ */
 async function submit() {
   try {
-    submitLoading.value = true
-    console.log('form.value :>> ', form.value);
-    await formRef.value.validate()
-    if (form.value.id) {
-      await apiUpdate(form.value)
-    } else {
-      await apiAdd(form.value)
-    }
-    window.$message.success('保存成功')
-    back()
+    submitLoading.value = true // 开启loading
+    await formRef.value.validate() // 验证表单
+    await apiUpdate(form.value) // 提交表单
+    window.$message.success('保存成功') // 提示保存成功
+    getDetail() // 获取详情
   } catch (error) {
+    // 错误处理
     console.error(error);
   } finally {
-    submitLoading.value = false
+    submitLoading.value = false // 关闭loading
   }
 }
 
-const router = useRouter()
-function back() {
-  router.back()
-}
-const route = useRoute()
 onMounted(() => {
-  if (route.params.id) {
-    getDetail()
-  }
+  getDetail()
 })
-const specsRef = ref(null)
 async function getDetail() {
   try {
-    const res = await apiDetail(route.params.id)
+    const res = await apiDetail()
     form.value = res
-    specsRef.value.loadSpecs(res.specs)
   } catch (error) {
     console.error(error);
   }
 }
 
-const allCategory = ref([])
-async function getCategory() {
-  try {
-    const res = await apiQueryCategory()
-    allCategory.value = res
-  } catch (error) {
-    console.error(error);
+const startOpeningHours = computed({
+  get() {
+    const res = dayjs(`2024-01-01 ${form.value?.startOpeningHours}`).valueOf()
+    return res || 0
+  },
+  set(val) {
+    form.value.startOpeningHours = dayjs(val).format('HH:mm:ss')
   }
-}
+})
 
-getCategory()
+const endOpeningHours = computed({
+  get() {
+    const res = dayjs(`2024-01-01 ${form.value?.endOpeningHours}`).valueOf()
 
+    return res || 0
+  },
+  set(val) {
+    form.value.endOpeningHours = dayjs(val).format('HH:mm:ss')
+  }
+})
 
+onMounted(() => {
+  window.addEventListener('message', function(event) {
+    // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
+    var loc = event.data;
+    if (loc && loc.module == 'locationPicker') {//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
+      console.log('location', loc);
+    }
+  }, false);
+})
 </script>
 
 <template>
@@ -71,21 +78,23 @@ getCategory()
           <n-input v-model:value="form.shopName" />
         </n-form-item>
         <n-form-item path="startOpeningHours" label="开始营业时间"
-          :rule="[{ required: true, message: '请选择开始营业时间', trigger: 'change' }]">
-          <n-time-picker v-model:value="form.startOpeningHours" style="width: 100%;" />
+          :rule="[{ required: true, message: '请选择商品图片', trigger: 'change' }]">
+          <n-time-picker v-model:value="startOpeningHours" style="width: 100%;" />
         </n-form-item>
         <n-form-item path="endOpeningHours" label="结束营业时间"
-          :rule="[{ required: true, message: '请选择结束营业时间', trigger: 'change' }]">
-          <n-time-picker v-model:value="form.endOpeningHours" style="width: 100%;" />
+          :rule="[{ required: true, message: '请选择商品图片', trigger: 'change' }]">
+          <n-time-picker v-model:value="endOpeningHours" style="width: 100%;" />
         </n-form-item>
         <n-form-item path="phone" label="商家电话" :rule="[{ required: true, message: '请选择商品图片', trigger: 'change' }]">
           <n-input v-model:value="form.phone" />
         </n-form-item>
         <n-form-item path="address" label="店铺地址" :rule="[{ required: true, message: '请选择商品图片', trigger: 'change' }]">
-          <n-input v-model:value="form.address" type="textarea" placeholder="商品介绍" />
+          <n-input v-model:value="form.address" placeholder="店铺地址" read-only:true />
         </n-form-item>
       </n-form>
     </div>
+
+
     <div w-full max-w-2xl>
       <n-flex>
         <n-button type="primary" @click="submit" size="large" :loading="submitLoading">保存</n-button>

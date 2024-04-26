@@ -41,7 +41,7 @@ function remove() {
 
 <template>
   <div>
-    <n-upload :action="uploadUrl" :headers="headers" :file-list="fileList" list-type="image-card" :max="1"
+    <n-upload :action="uploadUrl" :headers="headers" :default-file-list="fileList" list-type="image-card" :max="1"
       @finish="finish" @remove="remove">
       <slot>
         点击上传
