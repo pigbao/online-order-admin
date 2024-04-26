@@ -1,14 +1,16 @@
 <script setup>
-import { apiAdd, apiDetail } from '@/api/user'
-import { apiAllRoles } from '@/api/role'
-
+import { apiAdd, apiDetail, apiUpdate } from '@/api/shop/banner'
+import { apiAll } from '@/api/goods/list'
+const emits = defineEmits(['reload'])
 defineExpose({
   open,
   close
 })
 
 const formRef = ref(null)
-const form = ref({})
+const form = ref({
+  sort: 0
+})
 
 const show = ref(false)
 
@@ -21,8 +23,9 @@ function open(id) {
 }
 
 function close() {
-  form.value = {}
+  form.value = { sort: 0 }
   show.value = false
+  emits('reload')
 }
 
 async function getDetail(id) {
@@ -38,7 +41,11 @@ async function submit() {
   try {
     submitLoading.value = true
     await formRef.value.validate()
-    await apiAdd(form.value)
+    if (!form.value.id) {
+      await apiAdd(form.value)
+    } else {
+      await apiUpdate(form.value)
+    }
     window.$message.success('新增成功')
     close()
   } catch (error) {
@@ -48,17 +55,17 @@ async function submit() {
   }
 }
 
-const roles = ref([])
-async function getRoles() {
+const goods = ref([])
+async function getGoods() {
   try {
-    const res = await apiAllRoles()
-    roles.value = res
+    const res = await apiAll()
+    goods.value = res
   } catch (error) {
     console.error(error);
   }
 }
 
-getRoles()
+getGoods()
 
 
 </script>
@@ -71,11 +78,12 @@ getRoles()
           <n-form-item path="url" label="图片">
             <UploadImage v-model:value="form.url"></UploadImage>
           </n-form-item>
-          <n-form-item path="sort" label="排序" :rule="[{ required: true, message: '请输入', trigger: 'blur' }]">
+          <n-form-item path="sort" label="排序"
+            :rule="[{ required: true, type: 'number', message: '请输入', trigger: 'blur' }]">
             <n-input-number :min="0" v-model:value="form.sort" style="width: 100%;" />
           </n-form-item>
-          <n-form-item path="goodsId" label="商品" :rule="[{ required: true, message: '请选择', trigger: 'change' }]">
-            <n-select v-model:value="form.goodsId" :options="roles" label-field="roleName" value-field="id" />
+          <n-form-item path="goodsId" label="商品">
+            <n-select v-model:value="form.goodsId" :options="goods" label-field="goodsName" value-field="id" />
           </n-form-item>
         </n-form>
         <template #action>

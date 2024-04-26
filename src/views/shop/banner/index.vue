@@ -1,6 +1,6 @@
 <script setup>
-import { NButton, NSpace } from 'naive-ui'
-import { apiQuery } from '@/api/user'
+import { NButton, NSpace, NImage } from 'naive-ui'
+import { apiQuery, apiDel } from '@/api/shop/banner'
 import Detail from './components/Detail.vue'
 
 const queryForm = ref({
@@ -10,29 +10,34 @@ const queryForm = ref({
   pageSize: 10
 })
 
-function search() {
-  queryForm.value.pageNum = 1
-  getList()
-}
-
-function reset() {
-  queryForm.value.username = null
-  queryForm.value.phone = null
-  getList()
-}
-
 const columns = ref([
   {
     title: '图片',
-    key: 'avatar'
+    key: 'url',
+    render(row) {
+      return h(NImage, {
+        src: row.url,
+        width: '50',
+      })
+    },
   },
   {
     title: '排序',
-    key: 'username'
+    key: 'sort'
   },
   {
-    title: '商品名称',
-    key: 'phone'
+    title: '跳转商品',
+    key: 'goodsId',
+    render(row) {
+      return h(NButton, {
+        strong: true,
+        tertiary: true,
+        size: 'small',
+        type: 'primary',
+        disabled: !row.goodsId,
+        onClick: () => handleGoods(row.goodsId)
+      }, { default: () => '查看商品' })
+    }
   },
   {
     title: '操作',
@@ -97,6 +102,32 @@ function add() {
 function handleEdit({ id }) {
   nextTick(() => {
     DetailRef.value.open(id)
+  })
+}
+
+function handleDel({ id }) {
+  window.$dialog.warning({
+    title: '提示',
+    content: `确定要删除轮播图吗？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      try {
+        await apiDel(id)
+        window.$message.success('删除成功')
+        getList()
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  })
+}
+
+const router = useRouter()
+
+function handleGoods(goodsId) {
+  router.push({
+    path: `/goods/list/detail/${goodsId}`
   })
 }
 

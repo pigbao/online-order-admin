@@ -156,6 +156,16 @@ export const constantRoutes = [
           title: '编辑商品'
         }
       },
+      // 商品详情
+      {
+        path: '/goods/list/detail/:id',
+        name: 'GoodsListDetail',
+        component: () => import('@/views/goods/list/detail.vue'),
+        meta: {
+          hide: true,
+          title: '商品详情'
+        }
+      },
 
     ]
   },

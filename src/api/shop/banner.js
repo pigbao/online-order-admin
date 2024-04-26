@@ -1,16 +1,14 @@
 import request from '@/utils/request';
 
-
 /**
  * 查询
- * @param {*} params 
+ * @param {*}  
  * @returns 
  */
-export function apiQuery(params) {
+export function apiQuery() {
   return request({
-    url: '/goods/query',
+    url: '/banner/query',
     method: 'get',
-    params: params,
   });
 }
 
@@ -21,20 +19,20 @@ export function apiQuery(params) {
  */
 export function apiAdd(data) {
   return request({
-    url: '/goods/add',
+    url: '/banner/add',
     method: 'post',
     data: data,
   });
 }
 
 /**
- * 编辑
+ * 修改
  * @param {*} data 
  * @returns 
  */
 export function apiUpdate(data) {
   return request({
-    url: '/goods/update',
+    url: '/banner/update',
     method: 'post',
     data: data,
   });
@@ -47,11 +45,12 @@ export function apiUpdate(data) {
  */
 export function apiDetail(id) {
   return request({
-    url: '/goods/detail',
+    url: '/banner/detail',
     method: 'get',
     params: {id},
   });
 }
+
 /**
  * 删除
  * @param {*} data 
@@ -59,34 +58,8 @@ export function apiDetail(id) {
  */
 export function apiDel(id) {
   return request({
-    url: '/goods/del',
+    url: '/banner/del',
     method: 'get',
     params: {id},
-  });
-}
-/**
- * 删除
- * @param {*} data 
- * @returns 
- */
-export function apiShelves(id,isShelves) {
-  return request({
-    url: '/goods/changeShelves',
-    method: 'get',
-    params: {id,isShelves},
-  });
-}
-
-
-/**
- * 查询
- * @param {*} params 
- * @returns 
- */
-export function apiAll(params) {
-  return request({
-    url: '/goods/query',
-    method: 'get',
-    params: params,
   });
 }

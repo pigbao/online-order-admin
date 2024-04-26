@@ -6,6 +6,8 @@ const formRef = ref(null)
 const form = ref({
 })
 
+const isDetail = ref(false)
+
 
 const submitLoading = ref(false)
 async function submit() {
@@ -33,8 +35,17 @@ function back() {
 }
 const route = useRoute()
 onMounted(() => {
+  console.log('route :>> ', route);
+
   if (route.params.id) {
     getDetail()
+  }
+
+  if (route.path.includes('detail')) {
+    isDetail.value = true
+  } else {
+    isDetail.value = false
+
   }
 })
 const specsRef = ref(null)
@@ -88,7 +99,7 @@ getCategory()
           </n-form-item>
         </n-form>
       </div>
-      <div w-full max-w-2xl>
+      <div w-full max-w-2xl v-if="!isDetail">
         <n-flex>
           <n-button type="primary" @click="submit" size="large" :loading="submitLoading">保存</n-button>
         </n-flex>
