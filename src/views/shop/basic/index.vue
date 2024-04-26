@@ -59,15 +59,6 @@ const endOpeningHours = computed({
   }
 })
 
-onMounted(() => {
-  window.addEventListener('message', function(event) {
-    // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
-    var loc = event.data;
-    if (loc && loc.module == 'locationPicker') {//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
-      console.log('location', loc);
-    }
-  }, false);
-})
 </script>
 
 <template>
@@ -89,12 +80,11 @@ onMounted(() => {
           <n-input v-model:value="form.phone" />
         </n-form-item>
         <n-form-item path="address" label="店铺地址" :rule="[{ required: true, message: '请选择商品图片', trigger: 'change' }]">
-          <n-input v-model:value="form.address" placeholder="店铺地址" read-only:true />
+          <LocPicker v-model:address="form.address" v-model:location="form.location" placeholder="店铺地址">
+          </LocPicker>
         </n-form-item>
       </n-form>
     </div>
-
-
     <div w-full max-w-2xl>
       <n-flex>
         <n-button type="primary" @click="submit" size="large" :loading="submitLoading">保存</n-button>
