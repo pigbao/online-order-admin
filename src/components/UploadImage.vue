@@ -1,18 +1,18 @@
 <script setup>
 
 const uploadUrl = `/api/upload`
-const fileList = computed(() => {
-  if (model.value === '' || model.value === undefined || model.value === null) {
-    return []
-  } else {
-    return [
-      {
-        url: model.value
-      }
-    ]
-  }
-})
-console.log('fileList :>> ', fileList);
+// const fileList = computed(() => {
+//   if (model.value === '' || model.value === undefined || model.value === null) {
+//     return []
+//   } else {
+//     return [
+//       {
+//         url: model.value
+//       }
+//     ]
+//   }
+// })
+const fileList = ref([])
 
 const model = defineModel('value')
 
@@ -29,7 +29,26 @@ function finish({ event }) {
     const data = JSON.parse(response).data
     model.value = import.meta.env.VITE_APP_BASE_URL + data.url
   }
+  console.log('fileList :>> ', fileList.value);
+
 }
+
+watchEffect(() => {
+  if (model.value === '' || model.value === undefined || model.value === null) {
+    fileList.value = []
+  } else {
+    if (fileList.value.length > 0) {
+      fileList.value[0].url = model.value
+    } else {
+      fileList.value = [
+        {
+          url: model.value,
+          status: 'finished',
+        }
+      ]
+    }
+  }
+})
 
 function remove() {
   model.value = undefined
@@ -41,7 +60,7 @@ function remove() {
 
 <template>
   <div>
-    <n-upload :action="uploadUrl" :headers="headers" :default-file-list="fileList" list-type="image-card" :max="1"
+    <n-upload :action="uploadUrl" :headers="headers" v-model:file-list="fileList" list-type="image-card" :max="1"
       @finish="finish" @remove="remove">
       <slot>
         点击上传
