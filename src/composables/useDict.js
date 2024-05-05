@@ -33,7 +33,7 @@ export const dicts = {
     { label: '备餐中', value: '2' },
     { label: '待取餐', value: '3' },
     { label: '已完成', value: '4' },
-    { label: '待配送', value: '5' },
+    { label: '配送中', value: '5' },
     { label: '已取消', value: '6' },
   ]
 }
