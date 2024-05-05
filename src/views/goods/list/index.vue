@@ -117,7 +117,7 @@ async function changeShelves(id, isShelves) {
         getList()
       } catch (error) {
         console.error(error);
-        window.$message.error(`${isShelvesLabel}成功`)
+        window.$message.error(`${isShelvesLabel}失败`)
       }
     },
     onNegativeClick: () => {

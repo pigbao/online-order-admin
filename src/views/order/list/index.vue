@@ -1,18 +1,23 @@
 <script setup>
-import { NButton, NSpace, NImage, NSwitch, NEllipsis } from 'naive-ui'
-import { apiQuery, apiDel, apiShelves } from '@/api/goods/list'
+import { NButton, NSpace, NEllipsis } from 'naive-ui'
+import { apiQuery, apiStatus } from '@/api/order/list'
 import dayjs from 'dayjs'
 import { h } from 'vue';
 const queryForm = ref({
-  goodsName: undefined,
+  orderNum: undefined,
+  orderStatus: undefined,
+  pageNum: 1,
+  pageSize: 10
 })
 
 function search() {
+  queryForm.value.pageNum = 1
   getList()
 }
 
 function reset() {
-  queryForm.value.goodsName = null
+  queryForm.value.orderNum = null
+  queryForm.value.orderStatus = null
   getList()
 }
 
@@ -25,32 +30,16 @@ const columns = ref([
     title: '订单状态',
     key: 'orderStatus',
     render(row) {
-      return row.orderStatus
+      return orderStatusDict.value[row.orderStatus]
     }
   },
-  // {
-  //   title: '客户OpenID',
-  //   key: 'openId',
-  // },
-  // {
-  //   title: '客户昵称',
-  //   key: 'customerNickname',
-  // },
-  // {
-  //   title: '客户头像',
-  //   key: 'customerAvatar',
-  //   render(row) {
-  //     return h(NImage, {
-  //       src: row.customerAvatar,
-  //       width: 40,
-  //       height: 40,
-  //       round: true,
-  //     })
-  //   },
-  // },
   {
     title: '是否外送',
     key: 'isTakeout',
+    render(row) {
+      return isTakeoutDict.value[row.isTakeout]
+    }
+
   },
   {
     title: '订单备注',
@@ -66,6 +55,9 @@ const columns = ref([
   {
     title: '支付金额',
     key: 'payPrice',
+    render(row) {
+      return row.payPrice / 100
+    }
   },
   {
     title: '下单时间',
@@ -82,52 +74,68 @@ const columns = ref([
         NSpace,
         {},
         {
-          default: () => [
-            h(
-              NButton,
-              {
-                strong: true,
-                tertiary: true,
-                size: 'small',
-                type: 'primary',
-                onClick: () => detail(row)
-              },
-              { default: () => '详情' }
-            ),
-            h(
-              NButton,
-              {
-                strong: true,
-                tertiary: true,
-                size: 'small',
-                type: 'primary',
-                onClick: () => detail(row)
-              },
-              { default: () => '开始制作' }
-            ),
-          ]
+          default: () => {
+            const buttons = [
+              h(
+                NButton,
+                {
+                  strong: true,
+                  tertiary: true,
+                  size: 'small',
+                  type: 'primary',
+                  onClick: () => detail(row)
+                },
+                { default: () => '详情' }
+              ),
+            ]
+
+            if ([2, 3, 5].includes(row.orderStatus)) {
+              buttons.push(h(
+                NButton,
+                {
+                  strong: true,
+                  tertiary: true,
+                  size: 'small',
+                  type: 'primary',
+                  onClick: () => changeStatus(row)
+                },
+                { default: () => changeStatusLabel(row.orderStatus) }
+              ),)
+            }
+            return buttons
+          }
         }
       )
     }
   }
 ])
 
-async function changeStauts(id, isShelves) {
-  const isShelvesLabel = isShelves == 2 ? '下架' : '上架'
+function changeStatusLabel(status) {
+  return status == 2 ? '出餐' : '完成'
+}
+
+async function changeStatus({ id, orderStatus, isTakeout }) {
   window.$dialog.warning({
     title: '提示',
-    content: `确定要${isShelvesLabel}商品吗？`,
+    content: `确认${changeStatusLabel(orderStatus)}吗？`,
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: async () => {
       try {
-        const status = 1
+        let status = 4
+        if (orderStatus == 2 && isTakeout == 1) {
+          status = 3
+        } else if (orderStatus == 2 && isTakeout == 2) {
+          status = 5
+        } else if (orderStatus == 3 || orderStatus == 5) {
+          status = 4
+        }
         await apiStatus(id, status)
-        window.$message.success(`修改成功成功`)
+        window.$message.success(`修改成功`)
         getList()
       } catch (error) {
         console.error(error);
-        window.$message.error(`${isShelvesLabel}成功`)
+        window.$message.error(`${changeStatusLabel(orderStatus)}失败`)
       }
     },
     onNegativeClick: () => {
@@ -141,17 +149,7 @@ const list = ref([])
 async function getList() {
   try {
     const res = await apiQuery(queryForm.value)
-    list.value = [
-      {
-        orderNum: 547876484648,
-        orderStatus: '待制作',
-        isTakeout: "否",
-        remark: "无",
-        payPrice: "19.1",
-
-
-      }
-    ]
+    list.value = res
   } catch (error) {
     console.error(error);
   }
@@ -168,25 +166,9 @@ function detail({ id }) {
   })
 }
 
-function del({ id, goodsName }) {
-  window.$dialog.warning({
-    title: '提示',
-    content: `确定要删除 [${goodsName}] 吗？`,
-    positiveText: '确定',
-    negativeText: '取消',
-    onPositiveClick: async () => {
-      try {
-        await apiDel(id)
-        window.$message.success('删除成功')
-        getList()
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  })
-}
-
-const { dictVL: isShowDict } = useDict('isShow')
+const { dictVL: orderStatusDict } = useDict('orderStatus')
+const { dictArray: orderStatusOptions } = useDict('orderStatus')
+const { dictVL: isTakeoutDict } = useDict('isTakeout')
 </script>
 
 <template>
@@ -194,6 +176,10 @@ const { dictVL: isShowDict } = useDict('isShow')
     <n-form ref="formRef" inline label-placement="left" :model="queryForm">
       <n-form-item label="订单编号" path="orderNum">
         <n-input v-model:value="queryForm.orderNum" placeholder="输入订单编号" />
+      </n-form-item>
+      <n-form-item label="订单状态" path="orderNum">
+        <n-select v-model:value="queryForm.orderStatus" placeholder="订单状态" :options="orderStatusOptions"
+          style="width: 200px;"></n-select>
       </n-form-item>
       <n-form-item>
         <n-space>
@@ -206,7 +192,8 @@ const { dictVL: isShowDict } = useDict('isShow')
         </n-space>
       </n-form-item>
     </n-form>
-    <n-data-table :columns="columns" :data="list" :bordered="false" striped />
+    <n-data-table :columns="columns" :data="list" :bordered="false" striped
+      :pagination="{ pageSize: queryForm.pageSize }" />
 
   </n-card>
 </template>
