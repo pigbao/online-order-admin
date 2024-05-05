@@ -9,6 +9,7 @@ export const constantRoutes = [
     meta: {
       title: 'Root',
       hide: true,
+      auth:false
     },
     redirect: '/home/index',
   },
@@ -18,6 +19,7 @@ export const constantRoutes = [
     component: Layout,
     meta: {
       title: '首页',
+      auth:false
     },
     redirect: '/home/index',
     children: [
@@ -25,6 +27,10 @@ export const constantRoutes = [
         path: '/home/index',
         name: 'HomeIndex',
         component: () => import('@/views/index.vue'),
+        meta: {
+          title: '首页',
+          auth:false
+        },
       },
     ],
   },
@@ -35,7 +41,8 @@ export const constantRoutes = [
     component: () => import('@/views/login.vue'),
     meta: {
       title: '登录',
-      hide: true
+      hide: true,
+      auth:false
     },
   },
   {
@@ -44,7 +51,8 @@ export const constantRoutes = [
     component: Layout,
     meta: {
       title: 'error',
-      hide: true
+      hide: true,
+      auth:false
     },
     redirect: '/error/404',
     children: [
@@ -54,19 +62,21 @@ export const constantRoutes = [
         component: () => import('@/views/404.vue'),
         meta: {
           title: '404',
-          hide: true
+          hide: true,
+          auth:false
         },
       },
     ],
   },
-  // 店铺管理
-  {
+   // 店铺管理
+   {
     path: '/shop',
     name: 'Shop',
     component: Layout,
     meta: {
       title: '店铺管理',
-      hide: false
+      hide: false,
+      auth:true
     },
     redirect: '/shop/basic',
     children: [
@@ -76,7 +86,8 @@ export const constantRoutes = [
         component: () => import('@/views/shop/basic/index.vue'),
         meta: {
           hide: false,
-          title: '店铺信息'
+          title: '店铺信息',
+          auth:true
         }
       },
       {
@@ -85,7 +96,8 @@ export const constantRoutes = [
         component: () => import('@/views/shop/banner/index.vue'),
         meta: {
           hide: false,
-          title: '轮播图'
+          title: '轮播图',
+          auth:true
         }
       },
     ],
@@ -96,7 +108,8 @@ export const constantRoutes = [
     component: Layout,
     meta: {
       title: '商品管理',
-      hide: false
+      hide: false,
+      auth:true
     },
     redirect: '/goods/list',
     children: [
@@ -106,7 +119,8 @@ export const constantRoutes = [
         component: () => import('@/views/goods/category/index.vue'),
         meta: {
           hide: false,
-          title: '商品分类'
+          title: '商品分类',
+          auth:true
         }
       },
       {
@@ -115,7 +129,8 @@ export const constantRoutes = [
         component: () => import('@/views/goods/category/detail.vue'),
         meta: {
           hide: true,
-          title: '添加分类'
+          title: '添加分类',
+          auth:true
         }
       },
       {
@@ -124,7 +139,8 @@ export const constantRoutes = [
         component: () => import('@/views/goods/category/detail.vue'),
         meta: {
           hide: true,
-          title: '添加分类'
+          title: '修改分类',
+          auth:true
         }
       },
       {
@@ -133,7 +149,8 @@ export const constantRoutes = [
         component: () => import('@/views/goods/list/index.vue'),
         meta: {
           hide: false,
-          title: '商品列表'
+          title: '商品列表',
+          auth:true
         }
       },
       // 添加商品
@@ -143,7 +160,8 @@ export const constantRoutes = [
         component: () => import('@/views/goods/list/detail.vue'),
         meta: {
           hide: true,
-          title: '添加商品'
+          title: '添加商品',
+          auth:true
         }
       },
       // 编辑商品
@@ -153,7 +171,8 @@ export const constantRoutes = [
         component: () => import('@/views/goods/list/detail.vue'),
         meta: {
           hide: true,
-          title: '编辑商品'
+          title: '编辑商品',
+          auth:true
         }
       },
       // 商品详情
@@ -163,7 +182,8 @@ export const constantRoutes = [
         component: () => import('@/views/goods/list/detail.vue'),
         meta: {
           hide: true,
-          title: '商品详情'
+          title: '商品详情',
+          auth:true
         }
       },
 
@@ -176,7 +196,8 @@ export const constantRoutes = [
     component: Layout,
     meta: {
       title: '订单管理',
-      hide: false
+      hide: false,
+      auth:true
     },
     redirect: '/order/list',
     children: [
@@ -186,7 +207,8 @@ export const constantRoutes = [
         component: () => import('@/views/order/list/index.vue'),
         meta: {
           hide: false,
-          title: '订单列表'
+          title: '订单列表',
+          auth:true
         }
       },
       {
@@ -195,7 +217,8 @@ export const constantRoutes = [
         component: () => import('@/views/order/list/detail.vue'),
         meta: {
           hide: true,
-          title: '订单详情'
+          title: '订单详情',
+          auth:true
         }
       },
     ]
@@ -206,7 +229,8 @@ export const constantRoutes = [
     component: Layout,
     meta: {
       title: '用户管理',
-      hide: false
+      hide: false,
+      auth:true
     },
     redirect: '/user/list',
     children: [
@@ -216,7 +240,8 @@ export const constantRoutes = [
         component: () => import('@/views/user/list/index.vue'),
         meta: {
           hide: false,
-          title: '用户列表'
+          title: '用户列表',
+          auth:true
         }
       },
       {
@@ -225,7 +250,8 @@ export const constantRoutes = [
         component: () => import('@/views/user/roles/index.vue'),
         meta: {
           hide: false,
-          title: '角色管理'
+          title: '角色管理',
+          auth:true
         }
       },
       {
@@ -234,7 +260,8 @@ export const constantRoutes = [
         component: () => import('@/views/user/me/index.vue'),
         meta: {
           hide: true,
-          title: '个人中心'
+          title: '个人中心',
+          auth:false
         }
       },
     ],
@@ -245,63 +272,14 @@ export const constantRoutes = [
     redirect: '/error/404',
     meta: {
       title: '404',
-      hide: true
+      hide: true,
+      auth:false
     },
   }
 ];
 
-export const asyncRoutes = [
-  // {
-  //   path: '/user',
-  //   name: 'User',
-  //   component: Layout,
-  //   meta: {
-  //     title: '用户管理',
-  //     hide: false
-  //   },
-  //   redirect: '/user/list',
-  //   children: [
-  //     {
-  //       path: '/user/list',
-  //       name: 'UserList',
-  //       component: () => import('@/views/user/list/index.vue'),
-  //       meta: {
-  //         hide: false,
-  //         title: '用户列表'
-  //       }
-  //     },
-  //     {
-  //       path: '/user/roles',
-  //       name: 'UserRoles',
-  //       component: () => import('@/views/user/roles/index.vue'),
-  //       meta: {
-  //         hide: false,
-  //         title: '角色管理'
-  //       }
-  //     },
-  //     {
-  //       path: '/user/me',
-  //       name: 'UserMe',
-  //       component: () => import('@/views/user/me/index.vue'),
-  //       meta: {
-  //         hide: true,
-  //         title: '个人中心'
-  //       }
-  //     },
-  //   ],
-  // },
 
-]
 
-export const notFoundRoute = {
-  path: '/:pathMatch(.*)*',
-  name: 'NotFound',
-  redirect: '/error/404',
-  meta: {
-    title: '404',
-    hide: true
-  },
-}
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

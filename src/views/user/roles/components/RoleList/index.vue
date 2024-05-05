@@ -1,6 +1,6 @@
 <script setup>
 import { apiAdd } from '@/api/role';
-defineProps({
+const props = defineProps({
   roles: {
     type: Array,
     default: () => [],
@@ -26,7 +26,9 @@ async function handleAdd() {
     submitLoading.value = false;
   }
 }
-
+const filterRoles = computed(() => {
+  return props.roles.filter((role) => role.id !== 1);
+});
 </script>
 
 <template>
@@ -48,7 +50,7 @@ async function handleAdd() {
     </n-form>
 
     <n-flex vertical size="large">
-      <n-button :type="model === role.id ? 'primary' : 'default'" block secondary v-for="role in roles"
+      <n-button :type="model === role.id ? 'primary' : 'default'" block secondary v-for="role in filterRoles"
         @click="model = role.id">
         {{ role.roleName }}
       </n-button>

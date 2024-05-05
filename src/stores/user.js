@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { apiUser } from '@/api/user';
-import {asyncLoadRoutes} from '@/router/guard/asyncRoutes'
+
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter();
@@ -14,7 +14,7 @@ export const useUserStore = defineStore('user', () => {
 
   function logout() {
     token.value = null;
-    userInfo.value = undefined
+    userInfo.value = undefined;
     console.log('router :>> ', router);
     if (router) {
       router.push('/login');
@@ -28,8 +28,6 @@ export const useUserStore = defineStore('user', () => {
       }
       const res = await apiUser();
       userInfo.value = res
-      console.log('userInfo.value :>> ', userInfo.value);
-      asyncLoadRoutes(userInfo.value?.menus,router)
       return userInfo;
     } catch (error) {
       console.error(error);
@@ -40,5 +38,6 @@ export const useUserStore = defineStore('user', () => {
     return userInfo.value?.roles
   }
 
-  return { token,getRoles, setToken, logout, getUserInfo };
+
+  return { token,getRoles, setToken, logout, getUserInfo,userInfo };
 });

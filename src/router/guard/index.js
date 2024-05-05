@@ -5,11 +5,10 @@ export function createGuard(router) {
     try {
       useTitle(`${import.meta.env.VITE_APP_TITLE} -----`);
       window.$loadingBar?.start();
-      const { token, getUserInfo,userInfo } = useUserStore();
-      const isLogin = Boolean(token);
-
-      if (to.path !== '/login') {
-        await getUserInfo();
+      const userStore = useUserStore();
+      const isLogin = Boolean(userStore.token);
+      if (to.path !== '/login' && !userStore.userInfo) {
+        await userStore.getUserInfo();
       }
 
       const actions = [
@@ -24,7 +23,7 @@ export function createGuard(router) {
           // 白名单不需要登录 直接进入
           flag: isWhite(to.path),
           action() {
-            actionNext();
+            next();
           },
         },
         {
@@ -36,22 +35,35 @@ export function createGuard(router) {
           },
         },
         {
-          // 已登录状态，并且有权限 直接进入
-          flag: isLogin && userInfo?.value?.role,
+          // 已登录状态，是超级管理员直接进入
+          flag: isLogin && userStore?.userInfo?.role == 1,
           action() {
-            actionNext();
+            next();
           },
         },
         {
-          // 已登录状态，无权限信息获取用户权限信息并挂载动态路由
-          flag: isLogin,
-          async action() {
-            // await getUserInfo()
-            next()
+          // 已登录状态，无需校验权限页面直接进入
+          flag: isLogin && (!to?.meta?.auth),
+          action() {
+            next();
           },
         },
-      ];
+        {
+          // 已登录状态，无权限 重定向到404页面
+          flag: isLogin && !userStore?.userInfo?.menus?.includes(to.name),
+          action() {
+            next({ path: '/error/404' });
+          },
+        },
+        {
+          // 已登录状态，并且有权限 直接进入
+          flag: isLogin && userStore?.userInfo?.menus?.includes(to.name),
+          action() {
+            next();
+          },
+        },
 
+      ];
       actions.some(item => {
         const { flag, action } = item;
         if (flag) {
@@ -59,10 +71,6 @@ export function createGuard(router) {
         }
         return flag;
       });
-
-      function actionNext() {
-        next();
-      }
     } catch (error) {
       console.log(error);
       next({ path: '/login' });

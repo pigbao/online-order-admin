@@ -1,5 +1,5 @@
 <script setup>
-import { asyncRoutes } from '@/router/index'
+import { constantRoutes } from '@/router/index'
 import { apiUpdate } from '@/api/role';
 
 const data = ref([]);
@@ -26,20 +26,25 @@ watch(() => props.role, (newVal) => {
 }, { immediate: true, deep: true })
 
 onMounted(() => {
-  data.value = loadData(asyncRoutes)
+  data.value = loadData(constantRoutes)
   console.log('data.value :>> ', data.value);
 })
 
-function loadData(asyncRoutes) {
-  return asyncRoutes.map(item => {
-    item.label = item.meta.title
-    if (item.children) {
-      item.children = loadData(item.children)
+function loadData(constantRoutes) {
+  const res = []
+  constantRoutes.forEach(item => {
+    if (item?.meta?.auth) {
+      let route = { ...item }
+      route.label = item?.meta?.title
+      if (item.children) {
+        route.children = loadData(item.children)
+      }
+      res.push(route)
     }
-    return item
-  })
-}
+  });
 
+  return res
+}
 
 async function handleSave() {
   try {
@@ -49,6 +54,7 @@ async function handleSave() {
       roleName: roleName.value
     })
     window.$message.success('保存成功')
+    location.reload();
     emits("load")
   } catch (error) {
     console.error(error);
@@ -62,7 +68,7 @@ async function handleSave() {
       <n-button type="primary" @click="handleSave"> 保存 </n-button>
     </template>
     <n-flex vertical>
-      <n-tree block-line :data v-model:checked-keys="checkedKeys" expand-on-click checkable key-field="name"
+      <n-tree block-line :data v-model:checked-keys="checkedKeys" expand-on-click checkable key-field="name" cascade
         label-field="label" children-field="children" />
     </n-flex>
   </n-card>

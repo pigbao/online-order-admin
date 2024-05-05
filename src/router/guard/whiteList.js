@@ -1,4 +1,4 @@
-const whiteList = ['/login'];
+const whiteList = ['/login','/error/404'];
 
 export default whiteList;
 
