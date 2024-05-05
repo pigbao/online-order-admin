@@ -35,6 +35,9 @@ function loadEcharts(date, count, price) {
     }]
   }
   myChart.setOption(option)
+  window.onresize = function() {
+    myChart.resize();
+  };
 }
 
 async function getList() {
@@ -55,9 +58,11 @@ async function getList() {
 onMounted(() => {
   getList()
 })
+
+
 </script>
 
 <template>
-  <div ref="el" w-full h-xl>
+  <div ref="el" style="width: 100%; height: 400px;">
   </div>
 </template>
