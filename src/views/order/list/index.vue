@@ -10,6 +10,20 @@ const queryForm = ref({
   pageSize: 10
 })
 
+const pageInfo = computed(() => {
+
+  return {
+    pageNum: 1,
+    pageSize: 10,
+    itemCount: total.value,
+    onChange: (page) => {
+      console.log('page :>> ', page);
+      queryForm.value.pageNum = page
+      getList()
+    },
+  }
+})
+
 function search() {
   queryForm.value.pageNum = 1
   getList()
@@ -145,11 +159,13 @@ async function changeStatus({ id, orderStatus, isTakeout }) {
 }
 
 const list = ref([])
+const total = ref(0)
 
 async function getList() {
   try {
     const res = await apiQuery(queryForm.value)
-    list.value = res
+    list.value = res.list
+    total.value = res.total
   } catch (error) {
     console.error(error);
   }
@@ -192,8 +208,7 @@ const { dictVL: isTakeoutDict } = useDict('isTakeout')
         </n-space>
       </n-form-item>
     </n-form>
-    <n-data-table :columns="columns" :data="list" :bordered="false" striped
-      :pagination="{ pageSize: queryForm.pageSize }" />
+    <n-data-table remote :columns="columns" :data="list" :bordered="false" striped :pagination="pageInfo" />
 
   </n-card>
 </template>
