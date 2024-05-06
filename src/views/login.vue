@@ -71,9 +71,6 @@ function login() {
                 </template>
               </n-input>
             </n-form-item>
-            <n-form-item>
-              <n-checkbox size="large" label="记住我" />
-            </n-form-item>
           </n-form>
           <n-button round type="primary" block @click="login" size="large">登录</n-button>
         </div>

@@ -27,7 +27,7 @@ const readyTakeOrderList = computed(() => {
 
 // 配送中订单
 const readyDeliveryOrderList = computed(() => {
-  return orderList.value.filter(item => item.orderStatus == 4)
+  return orderList.value.filter(item => item.orderStatus == 5)
 })
 
 async function getOrderList() {

@@ -1,6 +1,6 @@
 <script setup>
-import { apiAdd,apiDetail } from '@/api/user'
-import { apiAllRoles } from '@/api/role' 
+import { apiAdd, apiDetail, apiUpdate } from '@/api/user'
+import { apiAllRoles } from '@/api/role'
 
 defineExpose({
   open,
@@ -25,7 +25,7 @@ function close() {
   show.value = false
 }
 
-async function getDetail(id){
+async function getDetail(id) {
   try {
     const res = await apiDetail(id)
     form.value = res
@@ -38,22 +38,27 @@ async function submit() {
   try {
     submitLoading.value = true
     await formRef.value.validate()
-    await apiAdd(form.value)
-    window.$message.success('新增成功')
+    if (form.value.id) {
+      await apiUpdate(form.value)
+    } else {
+
+      await apiAdd(form.value)
+    }
+    window.$message.success('保存成功')
     close()
   } catch (error) {
     console.error(error);
-  }finally{
+  } finally {
     submitLoading.value = false
   }
 }
 
 const roles = ref([])
-async function getRoles(){
+async function getRoles() {
   try {
     const res = await apiAllRoles()
     roles.value = res
-  }catch (error) {
+  } catch (error) {
     console.error(error);
   }
 }
@@ -76,13 +81,12 @@ getRoles()
             :rule="[{ required: true, min: 6, message: '请输入长度至少6位的密码', trigger: 'blur' }]">
             <n-input v-model:value="form.password" type="password" show-password-on="mousedown" />
           </n-form-item>
-          <n-form-item path="phone" label="联系方式" :rule="[{ required: true, message: '请输入', trigger: 'blur' }]">
+          <n-form-item path="phone" label="联系方式">
             <n-input v-model:value="form.phone" />
           </n-form-item>
-          <n-form-item path="role" label="角色" :rule="[{ required: true, message: '请选择', trigger: 'change' }]">
-            <n-select v-model:value="form.role" :options="roles" 
-              label-field="roleName"
-              value-field="id"/>
+          <n-form-item path="role" label="角色"
+            :rule="[{ required: true, type: 'number', message: '请选择', trigger: 'change' }]">
+            <n-select v-model:value="form.role" :options="roles" label-field="roleName" value-field="id" />
           </n-form-item>
           <n-form-item path="avatar" label="头像">
             <UploadImage v-model:value="form.avatar"></UploadImage>

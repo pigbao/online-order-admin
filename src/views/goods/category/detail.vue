@@ -73,19 +73,12 @@ async function getDetail() {
               :rule="[{ required: true, min: 2, max: 5, message: '请输入2到5位的分类名称', trigger: 'blur' }]">
               <n-input v-model:value="form.categoryName" />
             </n-form-item>
-            <n-form-item path="isShow" label="是否显示" :rule="[{ required: true, message: '请选择', trigger: 'change' }]">
-              <n-select v-model:value="form.isShow" :options="isShowDict" />
-            </n-form-item>
             <n-form-item path="isTakeout" label="类型" :rule="[{ required: true, message: '请选择', trigger: 'change' }]">
               <n-checkbox-group v-model:value="isTakeout">
                 <n-space item-style="display: flex;">
                   <n-checkbox :value="item.value" :label="item.label" :key="item.value" v-for="item in isTakeoutDict" />
                 </n-space>
               </n-checkbox-group>
-            </n-form-item>
-
-            <n-form-item path="icon" label="分类图标">
-              <UploadImage v-model:value="form.icon"></UploadImage>
             </n-form-item>
           </n-form>
         </div>

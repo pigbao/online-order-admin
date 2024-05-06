@@ -1,5 +1,5 @@
 <script setup>
-import { NButton, NSpace } from 'naive-ui'
+import { NButton, NSpace, NImage } from 'naive-ui'
 import { apiQuery } from '@/api/user'
 import Detail from './components/Detail.vue'
 
@@ -24,7 +24,13 @@ function reset() {
 const columns = ref([
   {
     title: '头像',
-    key: 'avatar'
+    key: 'avatar',
+    render(row) {
+      return h(NImage, {
+        src: row.avatar,
+        width: '50',
+      })
+    }
   },
   {
     title: '用户名',
@@ -137,7 +143,6 @@ function handleEdit({ id }) {
     </div>
     <n-data-table :columns="columns" :data="list" :bordered="false" striped
       :pagination="{ pageSize: queryForm.pageSize }" />
-
     <Detail ref="DetailRef" @reload="getList"></Detail>
   </n-card>
 </template>

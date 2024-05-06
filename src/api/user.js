@@ -9,8 +9,8 @@ export function apiUser() {
 
 /**
  * 查询用户
- * @param {*} params 
- * @returns 
+ * @param {*} params
+ * @returns
  */
 export function apiQuery(params) {
   return request({
@@ -22,8 +22,8 @@ export function apiQuery(params) {
 
 /**
  * 新增用户
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function apiAdd(data) {
   return request({
@@ -32,16 +32,28 @@ export function apiAdd(data) {
     data: data,
   });
 }
+/**
+ * 更新用户
+ * @param {*} data
+ * @returns
+ */
+export function apiUpdate(data) {
+  return request({
+    url: '/user/update',
+    method: 'post',
+    data: data,
+  });
+}
 
 /**
- * 新增用户
- * @param {*} data 
- * @returns 
+ * 获取用户
+ * @param {*} data
+ * @returns
  */
 export function apiDetail(id) {
   return request({
     url: '/user/detail',
     method: 'get',
-    params: {id},
+    params: { id },
   });
 }

@@ -13,11 +13,6 @@ function renderIcon(icon) {
 
 const options = ref([
   {
-    label: '用户中心',
-    key: 'userCenter',
-    icon: renderIcon('i-carbon-user-profile')
-  },
-  {
     type: 'divider',
     key: 'd1'
   },
@@ -59,8 +54,9 @@ const actions = {
     })
   }
 }
-
-const avatar = ref('')
+const userInfo = computed(() => {
+  return userStore.userInfo
+})
 
 </script>
 
@@ -68,9 +64,9 @@ const avatar = ref('')
   <n-dropdown trigger="click" :options="options" :show-arrow="true" @select="handleSelect">
     <Basic>
       <div flex gap-2 items-center px-2>
-        <n-avatar round size="medium" :src="avatar">
+        <n-avatar round size="medium" :src="userInfo?.avatar">
         </n-avatar>
-        <div text-6>Lerzi</div>
+        <div text-6>{{ userInfo?.username }}</div>
       </div>
     </Basic>
   </n-dropdown>

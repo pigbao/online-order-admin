@@ -22,18 +22,16 @@ const columns = ref([
   },
   {
     title: '类型',
-    key: 'isTakeout'
+    key: 'isTakeout',
+    render(row) {
+      const arr = row.isTakeout.split(',')
+      const res = arr.map(item => isTakeoutDict.value[item])
+      return res.toString()
+    }
   },
   {
     title: '排序',
     key: 'sort'
-  },
-  {
-    title: '是否显示',
-    key: 'isShow',
-    render(row) {
-      return isShowDict.value[row.isShow]
-    }
   },
   {
     title: '创建者',
@@ -129,7 +127,7 @@ function del({ id, categoryName }) {
   })
 }
 
-const { dictVL: isShowDict } = useDict('isShow')
+const { dictVL: isTakeoutDict } = useDict('isTakeout')
 </script>
 
 <template>

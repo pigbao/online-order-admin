@@ -37,7 +37,7 @@ function handleClose() {
     <n-drawer v-model:show="active" :width="502" placement="right" @afterLeave="handleClose">
       <n-drawer-content title="选择地址">
         <iframe id="mapPage" width="100%" height="100%" frameborder=0
-          src="https://apis.map.qq.com/tools/locpicker?search=0&type=1&key=KICBZ-MTJWV-QCSP3-5RWQP-3UPHT-54BXF&referer=点餐">
+          src="https://apis.map.qq.com/tools/locpicker?search=0&type=1&key=F2EBZ-FOECI-KUOG3-UFRWT-IHBUT-FCFAA&referer=点餐">
         </iframe>
       </n-drawer-content>
     </n-drawer>
