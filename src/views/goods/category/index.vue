@@ -1,38 +1,39 @@
 <script setup>
 import { NButton, NSpace } from 'naive-ui'
-import { apiQuery } from '@/api/user'
-import Detail from './components/Detail.vue'
-
+import { apiQuery, apiDel } from '@/api/goods/category'
+import dayjs from 'dayjs'
 const queryForm = ref({
-  username: undefined,
-  phone: undefined,
-  pageNum: 1,
-  pageSize: 10
+  categoryName: undefined,
 })
 
 function search() {
-  queryForm.value.pageNum = 1
   getList()
 }
 
 function reset() {
-  queryForm.value.username = null
-  queryForm.value.phone = null
+  queryForm.value.categoryName = null
   getList()
 }
 
 const columns = ref([
   {
-    title: '头像',
-    key: 'avatar'
+    title: '分类名称',
+    key: 'categoryName'
   },
   {
-    title: '用户名',
-    key: 'username'
+    title: '类型',
+    key: 'isTakeout'
   },
   {
-    title: '联系方式',
-    key: 'phone'
+    title: '排序',
+    key: 'sort'
+  },
+  {
+    title: '是否显示',
+    key: 'isShow',
+    render(row) {
+      return isShowDict.value[row.isShow]
+    }
   },
   {
     title: '创建者',
@@ -40,7 +41,10 @@ const columns = ref([
   },
   {
     title: '创建时间',
-    key: 'createTime'
+    key: 'createTime',
+    render(row) {
+      return dayjs(row.createTime).format('YYYY-MM-DD HH:mm:ss')
+    }
   },
   {
     title: '操作',
@@ -58,7 +62,7 @@ const columns = ref([
                 tertiary: true,
                 size: 'small',
                 type: 'primary',
-                onClick: () => handleEdit(row)
+                onClick: () => edit(row)
               },
               { default: () => '编辑' }
             ),
@@ -69,7 +73,7 @@ const columns = ref([
                 tertiary: true,
                 size: 'small',
                 type: 'error',
-                onClick: () => handleDel(row)
+                onClick: () => del(row)
               },
               { default: () => '删除' }
             ),
@@ -93,31 +97,46 @@ async function getList() {
 
 getList()
 
-
-const DetailRef = ref(null)
+const router = useRouter()
 // 新增
 function add() {
-  nextTick(() => {
-    DetailRef.value.open()
+  router.push({
+    name: 'GoodsCategoryAdd'
   })
 }
 
-function handleEdit({ id }) {
-  nextTick(() => {
-    DetailRef.value.open(id)
+function edit({ id }) {
+  router.push({
+    path: `/goods/category/edit/${id}`
   })
 }
 
+function del({ id, categoryName }) {
+  window.$dialog.warning({
+    title: '提示',
+    content: `确定要删除 [${categoryName}] 吗？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      try {
+        await apiDel(id)
+        window.$message.success('删除成功')
+        getList()
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  })
+}
+
+const { dictVL: isShowDict } = useDict('isShow')
 </script>
 
 <template>
   <n-card h-full>
     <n-form ref="formRef" inline label-placement="left" :model="queryForm">
-      <n-form-item label="用户名" path="username">
-        <n-input v-model:value="queryForm.username" placeholder="输入用户名" />
-      </n-form-item>
-      <n-form-item label="联系方式" path="phone">
-        <n-input v-model:value="queryForm.phone" placeholder="输入联系方式" />
+      <n-form-item label="分类名称" path="categoryName">
+        <n-input v-model:value="queryForm.categoryName" placeholder="输入分类名称" />
       </n-form-item>
       <n-form-item>
         <n-space>
@@ -135,9 +154,7 @@ function handleEdit({ id }) {
         新增
       </n-button>
     </div>
-    <n-data-table :columns="columns" :data="list" :bordered="false" striped
-      :pagination="{ pageSize: queryForm.pageSize }" />
+    <n-data-table :columns="columns" :data="list" :bordered="false" striped />
 
-    <Detail ref="DetailRef" @reload="getList"></Detail>
   </n-card>
 </template>

@@ -4,6 +4,13 @@ import PageHeader from './components/PageHeader/index.vue'
 const appMain = ref(null)
 const { toggle } = useFullscreen(appMain)
 
+const loadShow = ref(true)
+function load() {
+  loadShow.value = false
+  setTimeout(() => {
+    loadShow.value = true
+  }, 300)
+}
 </script>
 
 <template>
@@ -12,11 +19,11 @@ const { toggle } = useFullscreen(appMain)
       <Sider></Sider>
       <n-layout>
         <div h-full flex flex-col>
-          <PageHeader @full="toggle"></PageHeader>
+          <PageHeader @full="toggle" @load="load"></PageHeader>
           <div w-full flex-1 p-6 bg-gray:5>
             <router-view v-slot="{ Component, route }">
               <transition name="fade" mode="out-in" :appear="true">
-                <component :is="Component" :key="route.fullPath" />
+                <component :is="Component" :key="route.fullPath" v-if="loadShow" />
               </transition>
             </router-view>
           </div>

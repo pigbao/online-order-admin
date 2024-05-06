@@ -58,6 +58,7 @@ export default defineConfig(configEnv => {
           //重写路径,替换/api
         },
       },
+      host: '0.0.0.0'
     },
   };
 });

@@ -2,6 +2,7 @@
 import Breadcrumb from './Breadcrumb.vue'
 import UserMenus from './UserMenus.vue'
 import Full from './Full.vue'
+import Load from './Load.vue'
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import Full from './Full.vue'
       <Breadcrumb></Breadcrumb>
 
       <div h-full flex>
+        <Load @click="$emit('load')"></Load>
         <Full @click="$emit('full')" />
         <UserMenus></UserMenus>
       </div>

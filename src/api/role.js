@@ -1,47 +1,67 @@
 import request from '@/utils/request';
-
-export function apiUser() {
-  return request({
-    url: '/user/getUserInfo',
-    method: 'get',
-  });
-}
-
+// 角色
 /**
- * 查询用户
+ * 查询
  * @param {*} params 
  * @returns 
  */
 export function apiQuery(params) {
   return request({
-    url: '/user/query',
+    url: '/role/query',
     method: 'get',
     params: params,
   });
 }
 
 /**
- * 新增用户
+ * 新增
  * @param {*} data 
  * @returns 
  */
 export function apiAdd(data) {
   return request({
-    url: '/user/add',
+    url: '/role/add',
     method: 'post',
     data: data,
   });
 }
 
 /**
- * 新增用户
+ * 编辑
+ * @param {*} data 
+ * @returns 
+ */
+export function apiUpdate(data) {
+  return request({
+    url: '/role/update',
+    method: 'post',
+    data: data,
+  });
+}
+
+/**
+ * 详情
  * @param {*} data 
  * @returns 
  */
 export function apiDetail(id) {
   return request({
-    url: '/user/detail',
+    url: '/role/detail',
     method: 'get',
     params: {id},
   });
 }
+
+
+/**
+ * 获取所有的角色
+ * @param {*} data 
+ * @returns 
+ */
+export function apiAllRoles() {
+  return request({
+    url: '/role/all',
+    method: 'get',
+  });
+}
+

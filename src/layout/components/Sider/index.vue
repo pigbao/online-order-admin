@@ -1,6 +1,6 @@
 <script setup>
 import Logo from '../Logo.vue'
-
+const userStore = useUserStore()
 const collapsed = ref(false)
 
 const activeKey = computed(() => {
@@ -8,13 +8,27 @@ const activeKey = computed(() => {
 })
 const route = useRoute()
 const router = useRouter()
-const menuOptions = useMenus(router.options.routes)
+const menuOptions = ref([])
 // router是全局路由对象
+
+// watch(
+//   () => userStore.userInfo.menus,
+//   (newValue) => {
+//     console.log('newValue :>> ', newValue);
+//     menuOptions.value = useMenus(router.getRoutes(), 'menu', userStore.userInfo.menus)
+//     console.log('menuOptions.value :>> ', menuOptions.value);
+//   }, {
+//   deep: true
+// }
+// )
+
 
 const menuRef = ref()
 onMounted(() => {
-  nextTick(() => {
+  nextTick(async () => {
     menuRef.value?.showOption(activeKey.value)
+    const { menus } = await userStore.getUserInfo()
+    menuOptions.value = useMenus(router.options.routes, 'menu', menus)
   })
 })
 </script>

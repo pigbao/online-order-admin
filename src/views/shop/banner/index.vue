@@ -1,6 +1,6 @@
 <script setup>
-import { NButton, NSpace } from 'naive-ui'
-import { apiQuery } from '@/api/user'
+import { NButton, NSpace, NImage } from 'naive-ui'
+import { apiQuery, apiDel } from '@/api/shop/banner'
 import Detail from './components/Detail.vue'
 
 const queryForm = ref({
@@ -10,37 +10,34 @@ const queryForm = ref({
   pageSize: 10
 })
 
-function search() {
-  queryForm.value.pageNum = 1
-  getList()
-}
-
-function reset() {
-  queryForm.value.username = null
-  queryForm.value.phone = null
-  getList()
-}
-
 const columns = ref([
   {
-    title: '头像',
-    key: 'avatar'
+    title: '图片',
+    key: 'url',
+    render(row) {
+      return h(NImage, {
+        src: row.url,
+        width: '50',
+      })
+    },
   },
   {
-    title: '用户名',
-    key: 'username'
+    title: '排序',
+    key: 'sort'
   },
   {
-    title: '联系方式',
-    key: 'phone'
-  },
-  {
-    title: '创建者',
-    key: 'createUserName'
-  },
-  {
-    title: '创建时间',
-    key: 'createTime'
+    title: '跳转商品',
+    key: 'goodsId',
+    render(row) {
+      return h(NButton, {
+        strong: true,
+        tertiary: true,
+        size: 'small',
+        type: 'primary',
+        disabled: !row.goodsId,
+        onClick: () => handleGoods(row.goodsId)
+      }, { default: () => '查看商品' })
+    }
   },
   {
     title: '操作',
@@ -108,28 +105,36 @@ function handleEdit({ id }) {
   })
 }
 
+function handleDel({ id }) {
+  window.$dialog.warning({
+    title: '提示',
+    content: `确定要删除轮播图吗？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      try {
+        await apiDel(id)
+        window.$message.success('删除成功')
+        getList()
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  })
+}
+
+const router = useRouter()
+
+function handleGoods(goodsId) {
+  router.push({
+    path: `/goods/list/detail/${goodsId}`
+  })
+}
+
 </script>
 
 <template>
   <n-card h-full>
-    <n-form ref="formRef" inline label-placement="left" :model="queryForm">
-      <n-form-item label="用户名" path="username">
-        <n-input v-model:value="queryForm.username" placeholder="输入用户名" />
-      </n-form-item>
-      <n-form-item label="联系方式" path="phone">
-        <n-input v-model:value="queryForm.phone" placeholder="输入联系方式" />
-      </n-form-item>
-      <n-form-item>
-        <n-space>
-          <n-button type="primary" attr-type="button" @click="search">
-            搜索
-          </n-button>
-          <n-button attr-type="button" @click="reset">
-            重置
-          </n-button>
-        </n-space>
-      </n-form-item>
-    </n-form>
     <div flex justify-end gap-4 mb-4>
       <n-button type="primary" attr-type="button" @click="add">
         新增

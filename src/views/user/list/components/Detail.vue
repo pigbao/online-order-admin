@@ -1,5 +1,6 @@
 <script setup>
-import { apiAdd } from '@/api/user'
+import { apiAdd,apiDetail } from '@/api/user'
+import { apiAllRoles } from '@/api/role' 
 
 defineExpose({
   open,
@@ -27,8 +28,9 @@ function close() {
 async function getDetail(id){
   try {
     const res = await apiDetail(id)
+    form.value = res
   } catch (error) {
-    
+    console.error(error);
   }
 }
 const submitLoading = ref(false)
@@ -43,9 +45,20 @@ async function submit() {
     console.error(error);
   }finally{
     submitLoading.value = false
-
   }
 }
+
+const roles = ref([])
+async function getRoles(){
+  try {
+    const res = await apiAllRoles()
+    roles.value = res
+  }catch (error) {
+    console.error(error);
+  }
+}
+
+getRoles()
 
 
 </script>
@@ -65,6 +78,11 @@ async function submit() {
           </n-form-item>
           <n-form-item path="phone" label="联系方式" :rule="[{ required: true, message: '请输入', trigger: 'blur' }]">
             <n-input v-model:value="form.phone" />
+          </n-form-item>
+          <n-form-item path="role" label="角色" :rule="[{ required: true, message: '请选择', trigger: 'change' }]">
+            <n-select v-model:value="form.role" :options="roles" 
+              label-field="roleName"
+              value-field="id"/>
           </n-form-item>
           <n-form-item path="avatar" label="头像">
             <UploadImage v-model:value="form.avatar"></UploadImage>

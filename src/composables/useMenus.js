@@ -3,18 +3,17 @@ import { RouterLink } from 'vue-router';
 
 
 
-
-export function useMenus(routes, type) {
-  const res = ref()
-  res.value = loadMenus(routes, type)
-  return res
+export function useMenus(routes, type,userMenus) {
+  console.log('routes :>> ', routes);
+  console.log('userMenus :>> ', userMenus);
+  return loadMenus(routes, type,userMenus)
 }
 
 /**
  * 
  * @param routes 
  */
-function loadMenus(routes, type) {
+function loadMenus(routes, type,userMenus) {
   let res = []
   routes.forEach(route => {
     const { name, path, meta } = route;
@@ -22,7 +21,7 @@ function loadMenus(routes, type) {
 
     let menuChildren
     if (route.children && route.children.length > 0) {
-      menuChildren = loadMenus(route.children, type);
+      menuChildren = loadMenus(route.children, type,userMenus);
     }
     const menuItem = addMenuItem({
       routePath: path,
@@ -31,8 +30,14 @@ function loadMenus(routes, type) {
       children: menuChildren,
       icon: meta?.icon
     }, type)
-    if (!meta?.hide) {
-      res.push(menuItem)
+    if(!meta.auth){
+      if (!meta?.hide) {
+        res.push(menuItem)
+      }
+    }else if(userMenus.includes(name)){
+      if (!meta?.hide) {
+        res.push(menuItem)
+      }
     }
   })
   return res

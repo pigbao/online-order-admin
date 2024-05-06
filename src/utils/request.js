@@ -26,6 +26,9 @@ instance.interceptors.response.use(
     const res = response.data;
 
     if (res.code === 500) {
+      if(typeof res.msg === 'object'){
+        res.msg = JSON.stringify(res.msg)
+      }
       window.$message.error(res.msg); // 对响应错误做点什么
       console.log('error :>> ', res);
       return Promise.reject(res);
