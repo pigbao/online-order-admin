@@ -115,6 +115,10 @@ async function changeStatus({ id, orderStatus, isTakeout }) {
     }
   })
 }
+
+const { dictVL: orderStatusDictVL } = useDict('orderStatus')
+const { dictVL: isTakeoutDictVL } = useDict('isTakeout')
+const { dictVL: sexDictVL } = useDict('sex')
 </script>
 
 <template>
@@ -127,16 +131,16 @@ async function changeStatus({ id, orderStatus, isTakeout }) {
             {{ form.orderNum }}
           </n-descriptions-item>
           <n-descriptions-item label="订单状态">
-            {{ form.orderStatus }}
+            {{ orderStatusDictVL[form.orderStatus] }}
           </n-descriptions-item>
           <n-descriptions-item label="是否外送">
-            {{ form.isTakeout }}
+            {{ isTakeoutDictVL[form.isTakeout] }}
           </n-descriptions-item>
           <n-descriptions-item label="备注">
             {{ form.remark }}
           </n-descriptions-item>
           <n-descriptions-item label="取餐码">
-            {{ form.code }}
+            {{ form.isTakeout == 2 ? form.code : '自取' }}
           </n-descriptions-item>
           <n-descriptions-item label="实付金额">
             ￥{{ form.payPrice / 100 }}
@@ -144,16 +148,16 @@ async function changeStatus({ id, orderStatus, isTakeout }) {
         </n-descriptions>
         <n-descriptions label-placement="top" bordered :column="4" title="配送信息" v-if="form.isTakeout == 2">
           <n-descriptions-item label="配送地址">
-            534864846846485846
+            {{ form.address }}
           </n-descriptions-item>
           <n-descriptions-item label="联系人">
-            已完成
+            {{ form.customerName }}
           </n-descriptions-item>
           <n-descriptions-item label="电话">
-            自取
+            {{ form.customerPhone }}
           </n-descriptions-item>
           <n-descriptions-item label="性别">
-            苹果
+            {{ sexDictVL[form.gender] }}
           </n-descriptions-item>
         </n-descriptions>
         <n-card title="商品明细">
