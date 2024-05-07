@@ -46,7 +46,7 @@ async function submit() {
     } else {
       await apiUpdate(form.value)
     }
-    window.$message.success('新增成功')
+    window.$message.success('保存成功')
     close()
   } catch (error) {
     console.error(error);
